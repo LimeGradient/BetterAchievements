@@ -35,11 +35,10 @@ bool BetterAchievementLayer::init() {
             ->setAutoGrowAxis(this->getContentSize().height)
             ->setGap(30.f)
     );
-    m_scrollLayer->setPosition({director->getScreenTop() / 2, director->getScreenRight() / 2});
+    m_scrollLayer->setPosition({director->getScreenRight() / 2 - 135.f, director->getScreenTop() / 2});
     this->addChild(m_scrollLayer);
 
     this->getAllAchievements();
-
     for (auto achievement : this->achievements) {
         auto achievementCell = BetterAchievementCell::create(achievement);
         achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth());
