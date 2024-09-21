@@ -46,7 +46,6 @@ bool BetterAchievementLayer::init() {
 
         m_scrollLayer->m_contentLayer->addChild(achievementCell);
         m_scrollLayer->m_contentLayer->updateLayout();
-        m_scrollLayer->updateLayout();
     }
 
     return true;
