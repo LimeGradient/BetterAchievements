@@ -15,17 +15,33 @@ bool BetterAchievementCell::init(Achievement* achievement) {
     m_bg->setOpacity(25);
     this->addChild(m_bg);
 
-    this->iconToIconIndex(achievement->icon);
+    auto icon = GJItemIcon::create(
+        this->iconToUnlockType(achievement->icon),
+        this->iconToIconIndex(achievement->icon),
+        ccc3(175, 175, 175),
+        ccc3(255, 255, 255), 
+        false, 
+        false, 
+        true, 
+        ccc3(255, 255, 255)
+    );
+    this->addChild(icon);
 
     return true;
 }
 
-std::vector<std::string> split(std::string s) {
-    
+std::vector<std::string> split(std::string s, std::string del) {
+    std::vector<std::string> tokens;
+    char* token = strtok(s.data(), del.c_str());
+    while (token != NULL) {
+        tokens.push_back(std::string(token));
+        token = strtok(NULL, del.c_str());
+    }
+    return tokens;
 }
 
 UnlockType BetterAchievementCell::iconToUnlockType(std::string icon) {
-    auto iconTypeRaw = icon.substr(0, icon.find("_"));
+    auto iconTypeRaw = split(icon, "_")[0];
 
     if (iconTypeRaw == "icon") return UnlockType::Cube;
     if (iconTypeRaw == "ship") return UnlockType::Ship;
@@ -38,13 +54,17 @@ UnlockType BetterAchievementCell::iconToUnlockType(std::string icon) {
     if (iconTypeRaw == "jetpack") return UnlockType::Jetpack;
     if (iconTypeRaw == "color") return UnlockType::Col1;
     if (iconTypeRaw == "color2") return UnlockType::Col2;
+
+    return UnlockType::Cube;
 }
 
 int BetterAchievementCell::iconToIconIndex(std::string icon) {
-    auto iconTypeRaw = icon.substr(1, icon.find("_"));
-    log::info("raw shit: {}", iconTypeRaw);
+    if (!icon.empty()) {
+        auto iconTypeRaw = split(icon, "_")[1];
+        return atoi(iconTypeRaw.c_str());
+    }
 
-    return 0;
+    return 10;
 }
 
 BetterAchievementCell* BetterAchievementCell::create(Achievement* achievement) {
