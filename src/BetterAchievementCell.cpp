@@ -3,19 +3,18 @@
 bool BetterAchievementCell::init(Achievement* achievement) {
     bool isUnlocked = AchievementManager::sharedState()->isAchievementEarned(achievement->identifier.c_str());
     log::info("identifier: {}", achievement->identifier);
-    log::info("icon: {}", achievement->icon);
     
     m_bg = CCScale9Sprite::create("square02b_small.png");
-    m_bg->setID("bg");
+    m_bg->setID("better-achievement-background");
     m_bg->setOpacity(0);
     m_bg->ignoreAnchorPointForPosition(false);
     m_bg->setAnchorPoint({ .0f, .0f });
-    m_bg->setScale(.7f);
+    m_bg->setScale(.85f);
     m_bg->setColor(ccWHITE);
     m_bg->setOpacity(25);
     this->addChild(m_bg);
 
-    auto icon = GJItemIcon::create(
+    m_icon = GJItemIcon::create(
         this->iconToUnlockType(achievement->icon),
         this->iconToIconIndex(achievement->icon),
         ccc3(175, 175, 175),
@@ -25,7 +24,30 @@ bool BetterAchievementCell::init(Achievement* achievement) {
         true, 
         ccc3(255, 255, 255)
     );
-    this->addChild(icon);
+    m_icon->setID("achievement-icon");
+    m_icon->setScale(0.625f);
+    m_icon->setPositionY(17.5f);
+    m_icon->setPositionX(17.5f);
+    this->addChild(m_icon);
+
+    if (m_icon->m_unlockType == UnlockType::Col1 || m_icon->m_unlockType == UnlockType::Col2) {
+        auto colText = CCLabelBMFont::create((m_icon->m_unlockType == UnlockType::Col1) ? "1" : "2", "bigFont.fnt");
+        colText->setScale(m_icon->getScale());
+        colText->setPosition({m_icon->getPositionX() - 3.f, m_icon->getPositionY() - 2.f});
+        m_icon->addChild(colText);
+    }
+
+    m_titleText = CCLabelBMFont::create(achievement->title.c_str(), "bigFont.fnt");
+    m_titleText->setID("achievement-title");
+    m_titleText->setScale(0.35f);
+    m_titleText->setPosition({m_icon->getPositionX() + 145.f, m_icon->getPositionY() + 7.f});
+    this->addChild(m_titleText);
+
+    m_descText = CCLabelBMFont::create((isUnlocked) ? achievement->achievedDescription.c_str() : achievement->unachievedDescription.c_str(), "bigFont.fnt");
+    m_descText->setID("achievement-description");
+    m_descText->setScale(0.2f);
+    m_descText->setPosition({m_titleText->getPositionX(), m_titleText->getPositionY() - 13.f});
+    this->addChild(m_descText);
 
     return true;
 }

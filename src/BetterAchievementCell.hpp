@@ -2,7 +2,6 @@
 
 #include <Geode/Geode.hpp>
 #include <Geode/binding/AchievementManager.hpp>
-#include <Geode/modify/AchievementBar.hpp>
 #include <Geode/modify/AchievementCell.hpp>
 
 #include "Achievement.hpp"
@@ -19,5 +18,7 @@ public:
     static BetterAchievementCell* create(Achievement* achievement);
 
     CCScale9Sprite* m_bg;
-    CCSprite* m_icon;
+    GJItemIcon* m_icon;
+    CCLabelBMFont* m_titleText;
+    CCLabelBMFont* m_descText;
 };

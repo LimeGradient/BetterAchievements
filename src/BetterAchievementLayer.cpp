@@ -33,19 +33,66 @@ bool BetterAchievementLayer::init() {
             ->setAxisReverse(true)
             ->setAxisAlignment(AxisAlignment::Start)
             ->setAutoGrowAxis(this->getContentSize().height)
-            ->setGap(30.f)
+            ->setGrowCrossAxis(true)
+            ->setCrossAxisOverflow(true)
+            ->setGap(37.5f)
+            
     );
-    m_scrollLayer->setPosition({director->getScreenRight() / 2 - 135.f, director->getScreenTop() / 2});
+    m_scrollLayer->setID("achievement-scroll-layer");
+    m_scrollLayer->m_scrollLimitBottom = 30.f;
+    m_scrollLayer->setPosition({director->getScreenRight() / 2 - 145.f, director->getScreenTop() / 2 - 143.f});
+    m_scrollLayer->setContentHeight(m_scrollLayer->getContentHeight() + 40.f);
+    m_scrollLayer->setZOrder(1);
+    m_scrollLayer->setScale(0.9f);
     this->addChild(m_scrollLayer);
+
+    auto scrollLayerBG = CCLayerColor::create({ 168, 85, 44, 255 });
+    scrollLayerBG->setID("scrollLayerBG");
+    scrollLayerBG->setContentSize({m_scrollLayer->getContentWidth(), m_scrollLayer->getContentHeight() + 20.f});
+    scrollLayerBG->ignoreAnchorPointForPosition(false);
+    scrollLayerBG->setPosition({director->getScreenRight() / 2 + 5.f, director->getScreenTop() / 2 + 5.f});
+    scrollLayerBG->setScale(0.9f);
+    this->addChild(scrollLayerBG);
+
+    auto topBar = CCSprite::createWithSpriteFrameName("GJ_table_top_001.png");
+    topBar->setID("top-bar");
+    topBar->setPosition({scrollLayerBG->getPositionX(), scrollLayerBG->getContentSize().height + 2.f});
+    topBar->setScale(0.9f);
+    topBar->setZOrder(1);
+    this->addChild(topBar);
+
+    auto bottomBar = CCSprite::createWithSpriteFrameName("GJ_table_bottom_001.png");
+    bottomBar->setID("bottom-bar");
+    bottomBar->setPosition({scrollLayerBG->getPositionX(), scrollLayerBG->getPositionY() - 130.f});
+    bottomBar->setScale(0.9f);
+    bottomBar->setZOrder(1);
+    this->addChild(bottomBar);
+
+    auto leftBar = CCSprite::createWithSpriteFrameName("GJ_table_side_001.png");
+    leftBar->setID("left-bar");
+    leftBar->setPosition({scrollLayerBG->getPositionX() - 165.f, scrollLayerBG->getPositionY()});
+    leftBar->setScaleY(3.725f);
+    this->addChild(leftBar);
+
+    auto rightBar = CCSprite::createWithSpriteFrameName("GJ_table_side_001.png");
+    rightBar->setID("right-bar");
+    rightBar->setPosition({scrollLayerBG->getContentSize().width + 75.f, scrollLayerBG->getPositionY()});
+    rightBar->setScaleY(3.725f);
+    rightBar->setFlipX(true);
+    this->addChild(rightBar);
 
     this->getAllAchievements();
     for (auto achievement : this->achievements) {
-        auto achievementCell = BetterAchievementCell::create(achievement);
-        achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth());
+        if (achievement->identifier.find("level") != std::string::npos) {
+            auto achievementCell = BetterAchievementCell::create(achievement);
+            achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth());
 
-        m_scrollLayer->m_contentLayer->addChild(achievementCell);
-        m_scrollLayer->m_contentLayer->updateLayout();
+            m_scrollLayer->m_contentLayer->addChild(achievementCell);
+            m_scrollLayer->m_contentLayer->updateLayout();
+        }
     }
+
+    m_scrollLayer->scrollToTop();
 
     return true;
 }
