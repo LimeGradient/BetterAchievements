@@ -39,16 +39,17 @@ bool BetterAchievementLayer::init() {
             
     );
     m_scrollLayer->setID("achievement-scroll-layer");
+    m_scrollLayer->m_scrollLimitTop = 30.f;
     m_scrollLayer->m_scrollLimitBottom = 30.f;
-    m_scrollLayer->setPosition({director->getScreenRight() / 2 - 145.f, director->getScreenTop() / 2 - 143.f});
-    m_scrollLayer->setContentHeight(m_scrollLayer->getContentHeight() + 40.f);
+    m_scrollLayer->setPosition({director->getScreenRight() / 2 - 145.f, director->getScreenTop() / 2 - 139.f});
+    m_scrollLayer->setContentHeight(m_scrollLayer->getContentHeight() + 70.f);
     m_scrollLayer->setZOrder(1);
     m_scrollLayer->setScale(0.9f);
     this->addChild(m_scrollLayer);
 
     auto scrollLayerBG = CCLayerColor::create({ 168, 85, 44, 255 });
     scrollLayerBG->setID("scrollLayerBG");
-    scrollLayerBG->setContentSize({m_scrollLayer->getContentWidth(), m_scrollLayer->getContentHeight() + 20.f});
+    scrollLayerBG->setContentSize({m_scrollLayer->getContentWidth(), m_scrollLayer->getContentHeight() + 5.f});
     scrollLayerBG->ignoreAnchorPointForPosition(false);
     scrollLayerBG->setPosition({director->getScreenRight() / 2 + 5.f, director->getScreenTop() / 2 + 5.f});
     scrollLayerBG->setScale(0.9f);
@@ -56,7 +57,7 @@ bool BetterAchievementLayer::init() {
 
     auto topBar = CCSprite::createWithSpriteFrameName("GJ_table_top_001.png");
     topBar->setID("top-bar");
-    topBar->setPosition({scrollLayerBG->getPositionX(), scrollLayerBG->getContentSize().height + 2.f});
+    topBar->setPosition({scrollLayerBG->getPositionX(), scrollLayerBG->getContentSize().height - 8.f});
     topBar->setScale(0.9f);
     topBar->setZOrder(1);
     this->addChild(topBar);
@@ -94,6 +95,40 @@ bool BetterAchievementLayer::init() {
 
     m_scrollLayer->scrollToTop();
 
+    auto buttonMenu = CCMenu::create();
+    buttonMenu->setID("button-menu");
+    buttonMenu->setScaledContentSize(topBar->getScaledContentSize());
+    buttonMenu->setPositionY(topBar->getPositionY() + 25.f);
+    buttonMenu->setZOrder(2);
+    this->addChild(buttonMenu);
+
+    auto mainLevelsBtnSpr = ButtonSprite::create("Main Levels", "bigFont.fnt", "GJ_button_01.png");
+    mainLevelsBtnSpr->setScale(0.4f);
+    auto mainLevelsBtn = CCMenuItemSpriteExtra::create(
+        mainLevelsBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
+    );
+    mainLevelsBtn->setPositionX(mainLevelsBtn->getPositionX() - 120.f);
+    mainLevelsBtn->setTag(1001);
+    buttonMenu->addChild(mainLevelsBtn);
+
+    auto userLevelsBtnSpr = ButtonSprite::create("User Levels", "bigFont.fnt", "GJ_button_01.png");
+    userLevelsBtnSpr->setScale(0.4f);
+    auto userLevelsBtn = CCMenuItemSpriteExtra::create(
+        userLevelsBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
+    );
+    userLevelsBtn->setPositionX(userLevelsBtn->getPositionX() - 30.f);
+    userLevelsBtn->setTag(1002);
+    buttonMenu->addChild(userLevelsBtn);
+
+    auto accountBtnSpr = ButtonSprite::create("Account", "bigFont.fnt", "GJ_button_01.png");
+    accountBtnSpr->setScale(0.4f);
+    auto accountBtn = CCMenuItemSpriteExtra::create(
+        accountBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
+    );
+    accountBtn->setPositionX(accountBtn->getPositionX() + 48.f);
+    accountBtn->setTag(1003);
+    buttonMenu->addChild(accountBtn);
+
     return true;
 }
 
@@ -110,6 +145,39 @@ void BetterAchievementLayer::getAllAchievements() {
         );
 
         this->achievements.push_back(_achievement);
+    }
+}
+
+void BetterAchievementLayer::loadPage(std::vector<std::string> keys) {
+    m_scrollLayer->m_contentLayer->removeAllChildren();
+
+    for (auto achievement : this->achievements) {
+        for (auto key : keys) {
+            if (achievement->identifier.find(key) != std::string::npos) {
+                auto achievementCell = BetterAchievementCell::create(achievement);
+                achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth());
+
+                m_scrollLayer->m_contentLayer->addChild(achievementCell);
+                m_scrollLayer->m_contentLayer->updateLayout();
+            }
+        }
+    }
+
+    this->m_scrollLayer->scrollToTop();
+}
+
+void BetterAchievementLayer::onLoadPage(CCObject* sender) {
+    int tag = sender->getTag();
+    switch(tag) {
+        case 1001:
+            this->loadPage(this->mainLevelsKeys);
+            break;
+        case 1002:
+            this->loadPage(this->userLevelsKeys);
+            break;
+        case 1003:
+            this->loadPage(this->accountKeys);
+            break;
     }
 }
 

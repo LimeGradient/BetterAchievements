@@ -2,7 +2,7 @@
 
 bool BetterAchievementCell::init(Achievement* achievement) {
     bool isUnlocked = AchievementManager::sharedState()->isAchievementEarned(achievement->identifier.c_str());
-    log::info("identifier: {}", achievement->identifier);
+    this->setID(achievement->identifier);
     
     m_bg = CCScale9Sprite::create("square02b_small.png");
     m_bg->setID("better-achievement-background");
