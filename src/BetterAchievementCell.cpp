@@ -10,6 +10,7 @@ bool BetterAchievementCell::init(Achievement* achievement) {
     m_bg->ignoreAnchorPointForPosition(false);
     m_bg->setAnchorPoint({ .0f, .0f });
     m_bg->setScale(.85f);
+    m_bg->setScaleX(.95f);
     m_bg->setColor(ccWHITE);
     m_bg->setOpacity(25);
     this->addChild(m_bg);
@@ -35,6 +36,13 @@ bool BetterAchievementCell::init(Achievement* achievement) {
         colText->setScale(m_icon->getScale());
         colText->setPosition({m_icon->getPositionX() - 3.f, m_icon->getPositionY() - 2.f});
         m_icon->addChild(colText);
+    }
+
+    if (!isUnlocked) {
+        auto lockSpr = CCSprite::createWithSpriteFrameName("GJ_lock_001.png");
+        lockSpr->setScale(0.825f);
+        lockSpr->setPosition({m_icon->getPositionX() - 3.f, m_icon->getPositionY() - 2.f});
+        m_icon->addChild(lockSpr);
     }
 
     m_titleText = CCLabelBMFont::create(achievement->title.c_str(), "bigFont.fnt");

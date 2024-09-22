@@ -41,7 +41,7 @@ bool BetterAchievementLayer::init() {
     m_scrollLayer->setID("achievement-scroll-layer");
     m_scrollLayer->m_scrollLimitTop = 30.f;
     m_scrollLayer->m_scrollLimitBottom = 30.f;
-    m_scrollLayer->setPosition({director->getScreenRight() / 2 - 145.f, director->getScreenTop() / 2 - 139.f});
+    m_scrollLayer->setPosition({director->getScreenRight() / 2 - 158.f, director->getScreenTop() / 2 - 139.f});
     m_scrollLayer->setContentHeight(m_scrollLayer->getContentHeight() + 70.f);
     m_scrollLayer->setZOrder(1);
     m_scrollLayer->setScale(0.9f);
@@ -83,51 +83,85 @@ bool BetterAchievementLayer::init() {
     this->addChild(rightBar);
 
     this->getAllAchievements();
-    for (auto achievement : this->achievements) {
-        if (achievement->identifier.find("level") != std::string::npos) {
-            auto achievementCell = BetterAchievementCell::create(achievement);
-            achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth());
-
-            m_scrollLayer->m_contentLayer->addChild(achievementCell);
-            m_scrollLayer->m_contentLayer->updateLayout();
-        }
-    }
+    this->loadPage(this->mainLevelsKeys);
 
     m_scrollLayer->scrollToTop();
 
-    auto buttonMenu = CCMenu::create();
+    buttonMenu = CCMenu::create();
     buttonMenu->setID("button-menu");
     buttonMenu->setScaledContentSize(topBar->getScaledContentSize());
     buttonMenu->setPositionY(topBar->getPositionY() + 25.f);
     buttonMenu->setZOrder(2);
     this->addChild(buttonMenu);
 
+    auto pageBackSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_03_001.png");
+    pageBackSpr->setScale(0.4f);
+    m_pageBackBtn = CCMenuItemSpriteExtra::create(pageBackSpr, this, menu_selector(BetterAchievementLayer::onMenuPageBack));
+    m_pageBackBtn->setPositionX(m_pageBackBtn->getPositionX() - 182.f);
+    buttonMenu->addChild(m_pageBackBtn);
+
+    auto pageForwardSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_03_001.png");
+    pageForwardSpr->setScale(0.4f);
+    pageForwardSpr->setFlipX(true);
+    m_pageForwardBtn = CCMenuItemSpriteExtra::create(pageForwardSpr, this, menu_selector(BetterAchievementLayer::onMenuPageForward));
+    m_pageForwardBtn->setPositionX(m_pageForwardBtn->getPositionX() + 182.f);
+    buttonMenu->addChild(m_pageForwardBtn);
+
     auto mainLevelsBtnSpr = ButtonSprite::create("Main Levels", "bigFont.fnt", "GJ_button_01.png");
     mainLevelsBtnSpr->setScale(0.4f);
-    auto mainLevelsBtn = CCMenuItemSpriteExtra::create(
+    m_mainLevelsBtn = CCMenuItemSpriteExtra::create(
         mainLevelsBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
     );
-    mainLevelsBtn->setPositionX(mainLevelsBtn->getPositionX() - 120.f);
-    mainLevelsBtn->setTag(1001);
-    buttonMenu->addChild(mainLevelsBtn);
+    m_mainLevelsBtn->setPositionX(m_mainLevelsBtn->getPositionX() - 120.f);
+    m_mainLevelsBtn->setTag(1001);
+    buttonMenu->addChild(m_mainLevelsBtn);
 
     auto userLevelsBtnSpr = ButtonSprite::create("User Levels", "bigFont.fnt", "GJ_button_01.png");
     userLevelsBtnSpr->setScale(0.4f);
-    auto userLevelsBtn = CCMenuItemSpriteExtra::create(
+    m_userLevelsBtn = CCMenuItemSpriteExtra::create(
         userLevelsBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
     );
-    userLevelsBtn->setPositionX(userLevelsBtn->getPositionX() - 30.f);
-    userLevelsBtn->setTag(1002);
-    buttonMenu->addChild(userLevelsBtn);
+    m_userLevelsBtn->setPositionX(m_userLevelsBtn->getPositionX() - 21.f);
+    m_userLevelsBtn->setTag(1002);
+    buttonMenu->addChild(m_userLevelsBtn);
 
     auto accountBtnSpr = ButtonSprite::create("Account", "bigFont.fnt", "GJ_button_01.png");
     accountBtnSpr->setScale(0.4f);
-    auto accountBtn = CCMenuItemSpriteExtra::create(
+    m_accountBtn = CCMenuItemSpriteExtra::create(
         accountBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
     );
-    accountBtn->setPositionX(accountBtn->getPositionX() + 48.f);
-    accountBtn->setTag(1003);
-    buttonMenu->addChild(accountBtn);
+    m_accountBtn->setPositionX(m_accountBtn->getPositionX() + 66.f);
+    m_accountBtn->setTag(1003);
+    buttonMenu->addChild(m_accountBtn);
+
+    auto secretBtnSpr = ButtonSprite::create("Secret", "bigFont.fnt", "GJ_button_01.png");
+    secretBtnSpr->setScale(0.4f);
+    m_secretBtn = CCMenuItemSpriteExtra::create(
+        secretBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
+    );
+    m_secretBtn->setPositionX(m_secretBtn->getPositionX() + 138.f);
+    m_secretBtn->setTag(1004);
+    buttonMenu->addChild(m_secretBtn);
+
+    auto shardsAndPathsBtnSpr = ButtonSprite::create("Shards & Paths", "bigFont.fnt", "GJ_button_01.png");
+    shardsAndPathsBtnSpr->setScale(0.4f);
+    m_shardsAndPathsBtn = CCMenuItemSpriteExtra::create(
+        shardsAndPathsBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
+    );
+    m_shardsAndPathsBtn->setPositionX(m_shardsAndPathsBtn->getPositionX() - 76.f);
+    m_shardsAndPathsBtn->setTag(1005);
+    m_shardsAndPathsBtn->setVisible(false);
+    buttonMenu->addChild(m_shardsAndPathsBtn);
+
+    auto miscBtnSpr = ButtonSprite::create("Miscellaneous", "bigFont.fnt", "GJ_button_01.png");
+    miscBtnSpr->setScale(0.4f);
+    m_miscBtn = CCMenuItemSpriteExtra::create(
+        miscBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
+    );
+    m_miscBtn->setPositionX(m_miscBtn->getPositionX() + 81.f);
+    m_miscBtn->setTag(1006);
+    m_miscBtn->setVisible(false);
+    buttonMenu->addChild(m_miscBtn);
 
     return true;
 }
@@ -171,14 +205,51 @@ void BetterAchievementLayer::onLoadPage(CCObject* sender) {
     switch(tag) {
         case 1001:
             this->loadPage(this->mainLevelsKeys);
+            this->m_scrollLayer->m_scrollLimitTop = 30.f;
             break;
         case 1002:
             this->loadPage(this->userLevelsKeys);
+            this->m_scrollLayer->m_scrollLimitTop = 30.f;
             break;
         case 1003:
             this->loadPage(this->accountKeys);
+            this->m_scrollLayer->m_scrollLimitTop = 30.f;
+            break;
+        case 1004:
+            this->loadPage(this->secretKeys);
+            this->m_scrollLayer->m_scrollLimitTop = 30.f;
+            break;
+        case 1005:
+            this->loadPage(this->shardsAndPathsKeys);
+            this->m_scrollLayer->m_scrollLimitTop = 30.f;
+            break;
+        case 1006:
+            this->loadPage(this->miscKeys);
+            this->m_scrollLayer->m_scrollLimitTop = 0.f;
             break;
     }
+}
+
+void BetterAchievementLayer::onMenuPageBack(CCObject* sender) {
+    m_pageForwardBtn->setVisible(true);
+    m_pageBackBtn->setVisible(false);
+    m_mainLevelsBtn->setVisible(true);
+    m_userLevelsBtn->setVisible(true);
+    m_accountBtn->setVisible(true);
+    m_secretBtn->setVisible(true);
+    m_shardsAndPathsBtn->setVisible(false);
+    m_miscBtn->setVisible(false);
+}
+
+void BetterAchievementLayer::onMenuPageForward(CCObject* sender) {
+    m_pageForwardBtn->setVisible(false);
+    m_pageBackBtn->setVisible(true);
+    m_mainLevelsBtn->setVisible(false);
+    m_userLevelsBtn->setVisible(false);
+    m_accountBtn->setVisible(false);
+    m_secretBtn->setVisible(false);
+    m_shardsAndPathsBtn->setVisible(true);
+    m_miscBtn->setVisible(true);
 }
 
 void BetterAchievementLayer::onClose(CCObject*) {
