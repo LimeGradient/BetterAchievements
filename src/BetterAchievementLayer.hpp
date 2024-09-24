@@ -29,8 +29,10 @@ protected:
     TabButton* m_shardsAndPathsTab;
     TabButton* m_miscTab;
 
-    CCMenuItemSpriteExtra* m_pageBackBtn;
-    CCMenuItemSpriteExtra* m_pageForwardBtn;
+    CCLabelBMFont* m_categoryTitle;
+
+    std::vector<CCNode*> m_unselectedTabs;
+    std::vector<CCMenuItemSpriteExtra*> m_selectedTabs;
 
     std::vector<Achievement*> achievements;
     void getAllAchievements();

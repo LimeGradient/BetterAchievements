@@ -83,17 +83,14 @@ bool BetterAchievementLayer::init() {
     rightBar->setFlipX(true);
     this->addChild(rightBar);
 
-    this->getAllAchievements();
-    this->loadPage(this->mainLevelsKeys);
-
     m_scrollLayer->scrollToTop();
 
     buttonMenu = CCMenu::create();
     buttonMenu->setID("button-menu");
     buttonMenu->setScaledContentSize(topBar->getScaledContentSize());
-    buttonMenu->setPositionY(topBar->getPositionY() + 25.f);
-    buttonMenu->setZOrder(2);
-    buttonMenu->setLayout(RowLayout::create()->setAutoScale(false)->setGap(-1.f));
+    buttonMenu->setPosition({topBar->getPositionX(), topBar->getPositionY() + 23.f});
+    buttonMenu->setZOrder(0);
+    buttonMenu->setLayout(RowLayout::create()->setAutoScale(false)->setGap(1.f));
     this->addChild(buttonMenu);
 
     auto createTab = [=](TabButton* tab, std::string text, int tag) {
@@ -101,6 +98,20 @@ bool BetterAchievementLayer::init() {
         tab->setScale(tabScale);
         tab->setTag(tag);
         buttonMenu->addChild(tab);
+
+        auto tabButtonSprite = static_cast<TabButtonSprite*>(tab->getChildren()->objectAtIndex(0));
+        auto tabText = static_cast<CCLabelBMFont*>(tabButtonSprite->getChildren()->objectAtIndex(0));
+        this->m_unselectedTabs.push_back(tabButtonSprite);
+
+        auto selectedTabSprite = CCSprite::createWithSpriteFrameName("tab-selected.png"_spr);
+        auto selectedTab = static_cast<CCMenuItemSpriteExtra*>(tab->getChildren()->objectAtIndex(1));
+        selectedTab->setID("tab-selected");
+        selectedTab->setTag(tag);
+        selectedTab->setSprite(selectedTabSprite);
+        this->m_selectedTabs.push_back(selectedTab);
+
+        auto selectedTabText = static_cast<CCLabelBMFont*>(tabText->getChildren()->objectAtIndex(0));
+        selectedTab->addChild(selectedTabText);
     };
 
     createTab(m_mainLevelsTab, "Main Levels", 1001);
@@ -109,6 +120,17 @@ bool BetterAchievementLayer::init() {
     createTab(m_secretTab, "Secret", 1004);
     createTab(m_shardsAndPathsTab, "Shards and Paths", 1005);
     createTab(m_miscTab, "Miscellaneous", 1006);
+
+    m_categoryTitle = CCLabelBMFont::create("Main Levels", "bigFont.fnt");
+    m_categoryTitle->setID("category-title");
+    m_categoryTitle->setScale(0.65f);
+    m_categoryTitle->setPosition({topBar->getPositionX(), topBar->getPositionY() + 3.f});
+    m_categoryTitle->setZOrder(1);
+    this->addChild(m_categoryTitle);
+
+    this->getAllAchievements();
+    this->loadPage(this->mainLevelsKeys);
+    this->m_selectedTabs.front()->setVisible(true);
 
     buttonMenu->updateLayout();
 
@@ -152,30 +174,47 @@ void BetterAchievementLayer::loadPage(std::vector<std::string> keys) {
 void BetterAchievementLayer::onLoadPage(CCObject* sender) {
     int tag = sender->getTag();
 
+    for (auto tab : this->m_unselectedTabs) {
+        tab->setVisible(true);
+    }
+    for (auto tab : this->m_selectedTabs) {
+        tab->setVisible(false);
+        if (tab->getTag() == tag) {
+            tab->setVisible(true);
+
+        }
+    }
+
     switch(tag) {
         case 1001:
             this->loadPage(this->mainLevelsKeys);
             this->m_scrollLayer->m_scrollLimitTop = 30.f;
+                this->m_categoryTitle->setString("Main Levels");
             break;
         case 1002:
             this->loadPage(this->userLevelsKeys);
-            this->m_scrollLayer->m_scrollLimitTop = 30.f;
+            this->m_scrollLayer->m_scrollLimitTop = 30.f;    
+                this->m_categoryTitle->setString("User Levels");     
             break;
         case 1003:
             this->loadPage(this->accountKeys);
             this->m_scrollLayer->m_scrollLimitTop = 30.f;
+                this->m_categoryTitle->setString("Account");
             break;
         case 1004:
             this->loadPage(this->secretKeys);
             this->m_scrollLayer->m_scrollLimitTop = 30.f;
+                this->m_categoryTitle->setString("Secret");
             break;
         case 1005:
             this->loadPage(this->shardsAndPathsKeys);
             this->m_scrollLayer->m_scrollLimitTop = 30.f;
+                this->m_categoryTitle->setString("Shards and Paths");
             break;
         case 1006:
             this->loadPage(this->miscKeys);
-            this->m_scrollLayer->m_scrollLimitTop = -10.f;
+            this->m_scrollLayer->m_scrollLimitTop = -30.f;
+            this->m_categoryTitle->setString("Miscellaneous");
             break;
     }
 }

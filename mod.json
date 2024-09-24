@@ -10,5 +10,12 @@
 	"name": "BetterAchievements",
 	"version": "v1.0.0",
 	"developer": "LimeGradient",
-	"description": "The better achievement menu"
+	"description": "The better achievement menu",
+	"resources": {
+		"spritesheets": {
+			"AchievementMenuSheet": [
+				"resources/*.png"
+			]
+		}
+	}
 }
