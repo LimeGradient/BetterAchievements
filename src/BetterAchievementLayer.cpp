@@ -130,7 +130,7 @@ bool BetterAchievementLayer::init() {
     m_accountBtn = CCMenuItemSpriteExtra::create(
         accountBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
     );
-    m_accountBtn->setPositionX(m_accountBtn->getPositionX() + 66.f);
+    m_accountBtn->setPositionX(m_accountBtn->getPositionX() + 68.f);
     m_accountBtn->setTag(1003);
     buttonMenu->addChild(m_accountBtn);
 
@@ -225,7 +225,7 @@ void BetterAchievementLayer::onLoadPage(CCObject* sender) {
             break;
         case 1006:
             this->loadPage(this->miscKeys);
-            this->m_scrollLayer->m_scrollLimitTop = 0.f;
+            this->m_scrollLayer->m_scrollLimitTop = -10.f;
             break;
     }
 }

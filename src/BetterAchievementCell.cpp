@@ -15,9 +15,22 @@ bool BetterAchievementCell::init(Achievement* achievement) {
     m_bg->setOpacity(25);
     this->addChild(m_bg);
 
+    auto unlockType = this->iconToUnlockType(achievement->icon);
+    auto iconIndex = this->iconToIconIndex(achievement->icon);
+
+    if (static_cast<int>(unlockType) < 1) {
+        unlockType = UnlockType::Cube;
+    }
+
+    if (iconIndex < 1) {
+        iconIndex = 1;
+    }
+
+    log::info("{}", achievement->identifier);
+
     m_icon = GJItemIcon::create(
-        this->iconToUnlockType(achievement->icon),
-        this->iconToIconIndex(achievement->icon),
+        unlockType,
+        iconIndex,
         ccc3(175, 175, 175),
         ccc3(255, 255, 255), 
         false, 
@@ -60,18 +73,18 @@ bool BetterAchievementCell::init(Achievement* achievement) {
     return true;
 }
 
-std::vector<std::string> split(std::string s, std::string del) {
+std::vector<std::string> split(std::string s, char del) {
     std::vector<std::string> tokens;
-    char* token = strtok(s.data(), del.c_str());
-    while (token != NULL) {
-        tokens.push_back(std::string(token));
-        token = strtok(NULL, del.c_str());
+    std::stringstream ss(s);
+    std::string token;
+    while(std::getline(ss, token, del)) {
+        tokens.push_back(token);
     }
     return tokens;
 }
 
 UnlockType BetterAchievementCell::iconToUnlockType(std::string icon) {
-    auto iconTypeRaw = split(icon, "_")[0];
+    auto iconTypeRaw = split(icon, '_').front();
 
     if (iconTypeRaw == "icon") return UnlockType::Cube;
     if (iconTypeRaw == "ship") return UnlockType::Ship;
@@ -89,12 +102,8 @@ UnlockType BetterAchievementCell::iconToUnlockType(std::string icon) {
 }
 
 int BetterAchievementCell::iconToIconIndex(std::string icon) {
-    if (!icon.empty()) {
-        auto iconTypeRaw = split(icon, "_")[1];
-        return atoi(iconTypeRaw.c_str());
-    }
-
-    return 10;
+    auto iconTypeRaw = split(icon, '_').back();
+    return atoi(iconTypeRaw.c_str());
 }
 
 BetterAchievementCell* BetterAchievementCell::create(Achievement* achievement) {
