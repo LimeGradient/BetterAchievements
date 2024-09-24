@@ -7,6 +7,7 @@ bool BetterAchievementLayer::init() {
 
     auto director = CCDirector::sharedDirector();
     auto winSize = director->getWinSize();
+    float tabScale = 0.55f;
 
     this->setID("BetterAchievementLayer");
 
@@ -92,76 +93,24 @@ bool BetterAchievementLayer::init() {
     buttonMenu->setScaledContentSize(topBar->getScaledContentSize());
     buttonMenu->setPositionY(topBar->getPositionY() + 25.f);
     buttonMenu->setZOrder(2);
+    buttonMenu->setLayout(RowLayout::create()->setAutoScale(false)->setGap(-1.f));
     this->addChild(buttonMenu);
 
-    auto pageBackSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_03_001.png");
-    pageBackSpr->setScale(0.4f);
-    m_pageBackBtn = CCMenuItemSpriteExtra::create(pageBackSpr, this, menu_selector(BetterAchievementLayer::onMenuPageBack));
-    m_pageBackBtn->setPositionX(m_pageBackBtn->getPositionX() - 182.f);
-    buttonMenu->addChild(m_pageBackBtn);
+    auto createTab = [=](TabButton* tab, std::string text, int tag) {
+        tab = TabButton::create(text.c_str(), this, menu_selector(BetterAchievementLayer::onLoadPage));
+        tab->setScale(tabScale);
+        tab->setTag(tag);
+        buttonMenu->addChild(tab);
+    };
 
-    auto pageForwardSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_03_001.png");
-    pageForwardSpr->setScale(0.4f);
-    pageForwardSpr->setFlipX(true);
-    m_pageForwardBtn = CCMenuItemSpriteExtra::create(pageForwardSpr, this, menu_selector(BetterAchievementLayer::onMenuPageForward));
-    m_pageForwardBtn->setPositionX(m_pageForwardBtn->getPositionX() + 182.f);
-    buttonMenu->addChild(m_pageForwardBtn);
+    createTab(m_mainLevelsTab, "Main Levels", 1001);
+    createTab(m_userLevelsTab, "User Levels", 1002);
+    createTab(m_accountTab, "Account", 1003);
+    createTab(m_secretTab, "Secret", 1004);
+    createTab(m_shardsAndPathsTab, "Shards and Paths", 1005);
+    createTab(m_miscTab, "Miscellaneous", 1006);
 
-    auto mainLevelsBtnSpr = ButtonSprite::create("Main Levels", "bigFont.fnt", "GJ_button_01.png");
-    mainLevelsBtnSpr->setScale(0.4f);
-    m_mainLevelsBtn = CCMenuItemSpriteExtra::create(
-        mainLevelsBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
-    );
-    m_mainLevelsBtn->setPositionX(m_mainLevelsBtn->getPositionX() - 120.f);
-    m_mainLevelsBtn->setTag(1001);
-    buttonMenu->addChild(m_mainLevelsBtn);
-
-    auto userLevelsBtnSpr = ButtonSprite::create("User Levels", "bigFont.fnt", "GJ_button_01.png");
-    userLevelsBtnSpr->setScale(0.4f);
-    m_userLevelsBtn = CCMenuItemSpriteExtra::create(
-        userLevelsBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
-    );
-    m_userLevelsBtn->setPositionX(m_userLevelsBtn->getPositionX() - 21.f);
-    m_userLevelsBtn->setTag(1002);
-    buttonMenu->addChild(m_userLevelsBtn);
-
-    auto accountBtnSpr = ButtonSprite::create("Account", "bigFont.fnt", "GJ_button_01.png");
-    accountBtnSpr->setScale(0.4f);
-    m_accountBtn = CCMenuItemSpriteExtra::create(
-        accountBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
-    );
-    m_accountBtn->setPositionX(m_accountBtn->getPositionX() + 68.f);
-    m_accountBtn->setTag(1003);
-    buttonMenu->addChild(m_accountBtn);
-
-    auto secretBtnSpr = ButtonSprite::create("Secret", "bigFont.fnt", "GJ_button_01.png");
-    secretBtnSpr->setScale(0.4f);
-    m_secretBtn = CCMenuItemSpriteExtra::create(
-        secretBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
-    );
-    m_secretBtn->setPositionX(m_secretBtn->getPositionX() + 138.f);
-    m_secretBtn->setTag(1004);
-    buttonMenu->addChild(m_secretBtn);
-
-    auto shardsAndPathsBtnSpr = ButtonSprite::create("Shards & Paths", "bigFont.fnt", "GJ_button_01.png");
-    shardsAndPathsBtnSpr->setScale(0.4f);
-    m_shardsAndPathsBtn = CCMenuItemSpriteExtra::create(
-        shardsAndPathsBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
-    );
-    m_shardsAndPathsBtn->setPositionX(m_shardsAndPathsBtn->getPositionX() - 76.f);
-    m_shardsAndPathsBtn->setTag(1005);
-    m_shardsAndPathsBtn->setVisible(false);
-    buttonMenu->addChild(m_shardsAndPathsBtn);
-
-    auto miscBtnSpr = ButtonSprite::create("Miscellaneous", "bigFont.fnt", "GJ_button_01.png");
-    miscBtnSpr->setScale(0.4f);
-    m_miscBtn = CCMenuItemSpriteExtra::create(
-        miscBtnSpr, this, menu_selector(BetterAchievementLayer::onLoadPage)
-    );
-    m_miscBtn->setPositionX(m_miscBtn->getPositionX() + 81.f);
-    m_miscBtn->setTag(1006);
-    m_miscBtn->setVisible(false);
-    buttonMenu->addChild(m_miscBtn);
+    buttonMenu->updateLayout();
 
     return true;
 }
@@ -202,6 +151,7 @@ void BetterAchievementLayer::loadPage(std::vector<std::string> keys) {
 
 void BetterAchievementLayer::onLoadPage(CCObject* sender) {
     int tag = sender->getTag();
+
     switch(tag) {
         case 1001:
             this->loadPage(this->mainLevelsKeys);
@@ -228,28 +178,6 @@ void BetterAchievementLayer::onLoadPage(CCObject* sender) {
             this->m_scrollLayer->m_scrollLimitTop = -10.f;
             break;
     }
-}
-
-void BetterAchievementLayer::onMenuPageBack(CCObject* sender) {
-    m_pageForwardBtn->setVisible(true);
-    m_pageBackBtn->setVisible(false);
-    m_mainLevelsBtn->setVisible(true);
-    m_userLevelsBtn->setVisible(true);
-    m_accountBtn->setVisible(true);
-    m_secretBtn->setVisible(true);
-    m_shardsAndPathsBtn->setVisible(false);
-    m_miscBtn->setVisible(false);
-}
-
-void BetterAchievementLayer::onMenuPageForward(CCObject* sender) {
-    m_pageForwardBtn->setVisible(false);
-    m_pageBackBtn->setVisible(true);
-    m_mainLevelsBtn->setVisible(false);
-    m_userLevelsBtn->setVisible(false);
-    m_accountBtn->setVisible(false);
-    m_secretBtn->setVisible(false);
-    m_shardsAndPathsBtn->setVisible(true);
-    m_miscBtn->setVisible(true);
 }
 
 void BetterAchievementLayer::onClose(CCObject*) {

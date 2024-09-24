@@ -22,12 +22,12 @@ protected:
     std::vector<std::string> miscKeys = {"facebook", "youtube", "twitter", "steam"};
 
     CCMenu* buttonMenu;
-    CCMenuItemSpriteExtra* m_mainLevelsBtn;
-    CCMenuItemSpriteExtra* m_userLevelsBtn;
-    CCMenuItemSpriteExtra* m_accountBtn;
-    CCMenuItemSpriteExtra* m_secretBtn;
-    CCMenuItemSpriteExtra* m_shardsAndPathsBtn;
-    CCMenuItemSpriteExtra* m_miscBtn;
+    TabButton* m_mainLevelsTab;
+    TabButton* m_userLevelsTab;
+    TabButton* m_accountTab;
+    TabButton* m_secretTab;
+    TabButton* m_shardsAndPathsTab;
+    TabButton* m_miscTab;
 
     CCMenuItemSpriteExtra* m_pageBackBtn;
     CCMenuItemSpriteExtra* m_pageForwardBtn;
