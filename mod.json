@@ -10,7 +10,11 @@
 	"name": "BetterAchievements",
 	"version": "v1.0.0",
 	"developer": "LimeGradient",
-	"description": "The better achievement menu",
+	"description": "A Better Achievement Menu!",
+	"links": {
+		"source": "https://github.com/LimeGradient/BetterAchievements",
+		"community": "https://discord.gg/FtVqAhcWQN"
+	},
 	"resources": {
 		"spritesheets": {
 			"AchievementMenuSheet": [
