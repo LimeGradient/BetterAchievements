@@ -26,8 +26,6 @@ bool BetterAchievementCell::init(Achievement* achievement) {
         iconIndex = 1;
     }
 
-    log::info("{}", achievement->identifier);
-
     m_icon = GJItemIcon::create(
         unlockType,
         iconIndex,
