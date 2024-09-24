@@ -21,8 +21,8 @@ bool BetterAchievementLayer::init() {
     this->addChild(backMenu, 1);
 
     backMenu->setPosition(ccp(director->getScreenLeft() + 25.f, director->getScreenTop() - 22.f));
-    setKeyboardEnabled(true);
-    setKeypadEnabled(true);
+    this->setKeyboardEnabled(true);
+    this->setKeypadEnabled(true);
 
     auto bg = geode::createLayerBG();
     bg->setID("content-background");
@@ -32,7 +32,7 @@ bool BetterAchievementLayer::init() {
     m_scrollLayer->m_contentLayer->setLayout(
         ColumnLayout::create()
             ->setAxisReverse(true)
-            ->setAxisAlignment(AxisAlignment::Start)
+            ->setAxisAlignment(AxisAlignment::End)
             ->setAutoGrowAxis(this->getContentSize().height)
             ->setGrowCrossAxis(true)
             ->setCrossAxisOverflow(true)
@@ -40,7 +40,7 @@ bool BetterAchievementLayer::init() {
             
     );
     m_scrollLayer->setID("achievement-scroll-layer");
-    m_scrollLayer->m_scrollLimitTop = 30.f;
+    m_scrollLayer->m_scrollLimitTop = 70.f;
     m_scrollLayer->m_scrollLimitBottom = 30.f;
     m_scrollLayer->setPosition({director->getScreenRight() / 2 - 158.f, director->getScreenTop() / 2 - 139.f});
     m_scrollLayer->setContentHeight(m_scrollLayer->getContentHeight() + 70.f);
@@ -185,35 +185,31 @@ void BetterAchievementLayer::onLoadPage(CCObject* sender) {
         }
     }
 
+    this->m_scrollLayer->scrollToTop();
+
     switch(tag) {
         case 1001:
             this->loadPage(this->mainLevelsKeys);
-            this->m_scrollLayer->m_scrollLimitTop = 30.f;
-                this->m_categoryTitle->setString("Main Levels");
+            this->m_categoryTitle->setString("Main Levels");
             break;
         case 1002:
-            this->loadPage(this->userLevelsKeys);
-            this->m_scrollLayer->m_scrollLimitTop = 30.f;    
-                this->m_categoryTitle->setString("User Levels");     
+            this->loadPage(this->userLevelsKeys);  
+            this->m_categoryTitle->setString("User Levels");     
             break;
         case 1003:
             this->loadPage(this->accountKeys);
-            this->m_scrollLayer->m_scrollLimitTop = 30.f;
-                this->m_categoryTitle->setString("Account");
+            this->m_categoryTitle->setString("Account");
             break;
         case 1004:
             this->loadPage(this->secretKeys);
-            this->m_scrollLayer->m_scrollLimitTop = 30.f;
-                this->m_categoryTitle->setString("Secret");
+            this->m_categoryTitle->setString("Secret");
             break;
         case 1005:
             this->loadPage(this->shardsAndPathsKeys);
-            this->m_scrollLayer->m_scrollLimitTop = 30.f;
-                this->m_categoryTitle->setString("Shards and Paths");
+            this->m_categoryTitle->setString("Shards and Paths");
             break;
         case 1006:
             this->loadPage(this->miscKeys);
-            this->m_scrollLayer->m_scrollLimitTop = -30.f;
             this->m_categoryTitle->setString("Miscellaneous");
             break;
     }
@@ -222,6 +218,10 @@ void BetterAchievementLayer::onLoadPage(CCObject* sender) {
 void BetterAchievementLayer::onClose(CCObject*) {
     auto mainMenu = MenuLayer::scene(false);
     CCDirector::sharedDirector()->pushScene(CCTransitionFade::create(0.5f, mainMenu));
+}
+
+void BetterAchievementLayer::keyBackClicked() {
+    this->onClose(new CCObject());
 }
 
 BetterAchievementLayer* BetterAchievementLayer::create() {

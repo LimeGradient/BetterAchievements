@@ -42,6 +42,8 @@ protected:
     void onLoadPage(CCObject* sender);
     void onMenuPageBack(CCObject* sender);
     void onMenuPageForward(CCObject* sender);
+    
+    void keyBackClicked() override;
 
 public:
     static BetterAchievementLayer* create();

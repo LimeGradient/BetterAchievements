@@ -68,6 +68,14 @@ bool BetterAchievementCell::init(Achievement* achievement) {
     m_descText->setPosition({m_titleText->getPositionX(), m_titleText->getPositionY() - 13.f});
     this->addChild(m_descText);
 
+    if (Mod::get()->getSettingValue<bool>("show-achievement-percentage")) {
+        int percentCompleted = std::clamp(AchievementManager::sharedState()->percentForAchievement(achievement->identifier.c_str()), 0, 100);
+        auto percentageLabel = CCLabelBMFont::create(fmt::format("{}%", percentCompleted).c_str(), "bigFont.fnt");
+        percentageLabel->setScale(0.35f);
+        percentageLabel->setPosition({300.f, 18.f});
+        this->addChild(percentageLabel);
+    }
+
     return true;
 }
 

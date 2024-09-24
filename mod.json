@@ -8,7 +8,7 @@
 	},
 	"id": "limegradient.betterachievements",
 	"name": "BetterAchievements",
-	"version": "v1.0.1",
+	"version": "v1.0.2",
 	"developer": "LimeGradient",
 	"description": "A Better Achievement Menu!",
 	"links": {
@@ -20,6 +20,14 @@
 			"AchievementMenuSheet": [
 				"resources/*.png"
 			]
+		}
+	},
+	"settings": {
+		"show-achievement-percentage": {
+			"type": "bool",
+			"name": "Show Achievement Percentage",
+			"description": "Show the percentage completed for every achievement",
+			"default": false
 		}
 	}
 }
