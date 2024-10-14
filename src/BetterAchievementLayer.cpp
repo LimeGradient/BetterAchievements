@@ -167,7 +167,6 @@ void BetterAchievementLayer::loadPage(std::vector<std::string> keys) {
 
     for (auto achievement : this->achievements) {
         auto achievementIdentifier = BAL_split(achievement->identifier, '.')[2];
-        log::info("{}", achievementIdentifier);
         for (auto key : keys) {
             if (achievement->identifier.find(key) != std::string::npos) {
                 auto achievementCell = BetterAchievementCell::create(achievement);

@@ -91,7 +91,6 @@ std::vector<std::string> split(std::string s, char del) {
 
 UnlockType BetterAchievementCell::iconToUnlockType(std::string icon) {
     auto iconTypeRaw = split(icon, '_').front();
-    log::info("{}", icon);
 
     if (iconTypeRaw == "icon") return UnlockType::Cube;
     if (iconTypeRaw == "ship") return UnlockType::Ship;
