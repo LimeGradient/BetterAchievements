@@ -14,12 +14,11 @@ protected:
     CCSprite* m_outline;
     ScrollLayer* m_scrollLayer;
 
-    std::vector<std::string> mainLevelsKeys = {"level", "tower", "coins", "mappacks", "gauntlets", "daily"};
-    std::vector<std::string> userLevelsKeys = {"demon", "stars", "moons", "usercoins", "diamonds", "lists"};
-    std::vector<std::string> accountKeys = {"custom", "rate", "jump", "attempts", "like", "friends", "submit", "creator"};
+    std::vector<std::string> mainLevelsKeys = {"level", "tower", "coins"};
+    std::vector<std::string> userLevelsKeys = {"demon", "stars", "moons", "usercoins", "diamonds", "lists", "mappacks", "gauntlets", "daily"};
+    std::vector<std::string> accountKeys = {"custom", "rate", "jump", "attempts", "like", "friends", "submit", "creator", "facebook", "youtube", "twitter", "steam"};
     std::vector<std::string> secretKeys = {"special", "secret"};
     std::vector<std::string> shardsAndPathsKeys = {"shard", "path"};
-    std::vector<std::string> miscKeys = {"facebook", "youtube", "twitter", "steam"};
 
     CCMenu* buttonMenu;
     TabButton* m_mainLevelsTab;

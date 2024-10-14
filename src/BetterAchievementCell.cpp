@@ -91,6 +91,7 @@ std::vector<std::string> split(std::string s, char del) {
 
 UnlockType BetterAchievementCell::iconToUnlockType(std::string icon) {
     auto iconTypeRaw = split(icon, '_').front();
+    log::info("{}", icon);
 
     if (iconTypeRaw == "icon") return UnlockType::Cube;
     if (iconTypeRaw == "ship") return UnlockType::Ship;
@@ -103,6 +104,8 @@ UnlockType BetterAchievementCell::iconToUnlockType(std::string icon) {
     if (iconTypeRaw == "jetpack") return UnlockType::Jetpack;
     if (iconTypeRaw == "color") return UnlockType::Col1;
     if (iconTypeRaw == "color2") return UnlockType::Col2;
+    if (iconTypeRaw == "streak") return UnlockType::Streak;
+    if (iconTypeRaw == "death") return UnlockType::Death;
 
     return UnlockType::Cube;
 }

@@ -7,7 +7,7 @@ bool BetterAchievementLayer::init() {
 
     auto director = CCDirector::sharedDirector();
     auto winSize = director->getWinSize();
-    float tabScale = 0.55f;
+    float tabScale = 0.75f;
 
     this->setID("BetterAchievementLayer");
 
@@ -50,7 +50,7 @@ bool BetterAchievementLayer::init() {
 
     auto scrollLayerBG = CCLayerColor::create({ 168, 85, 44, 255 });
     scrollLayerBG->setID("scrollLayerBG");
-    scrollLayerBG->setContentSize({m_scrollLayer->getContentWidth(), m_scrollLayer->getContentHeight() + 5.f});
+    scrollLayerBG->setContentSize({369.f, m_scrollLayer->getContentHeight() + 5.f});
     scrollLayerBG->ignoreAnchorPointForPosition(false);
     scrollLayerBG->setPosition({director->getScreenRight() / 2 + 5.f, director->getScreenTop() / 2 + 5.f});
     scrollLayerBG->setScale(0.9f);
@@ -78,7 +78,7 @@ bool BetterAchievementLayer::init() {
 
     auto rightBar = CCSprite::createWithSpriteFrameName("GJ_table_side_001.png");
     rightBar->setID("right-bar");
-    rightBar->setPosition({scrollLayerBG->getContentSize().width + 75.f, scrollLayerBG->getPositionY()});
+    rightBar->setPosition({scrollLayerBG->getContentSize().width + 85.f, scrollLayerBG->getPositionY()});
     rightBar->setScaleY(3.725f);
     rightBar->setFlipX(true);
     this->addChild(rightBar);
@@ -119,7 +119,6 @@ bool BetterAchievementLayer::init() {
     createTab(m_accountTab, "Account", 1003);
     createTab(m_secretTab, "Secret", 1004);
     createTab(m_shardsAndPathsTab, "Shards and Paths", 1005);
-    createTab(m_miscTab, "Miscellaneous", 1006);
 
     m_categoryTitle = CCLabelBMFont::create("Main Levels", "bigFont.fnt");
     m_categoryTitle->setID("category-title");
@@ -153,10 +152,22 @@ void BetterAchievementLayer::getAllAchievements() {
     }
 }
 
+std::vector<std::string> BAL_split(std::string s, char del) {
+    std::vector<std::string> tokens;
+    std::stringstream ss(s);
+    std::string token;
+    while(std::getline(ss, token, del)) {
+        tokens.push_back(token);
+    }
+    return tokens;
+}
+
 void BetterAchievementLayer::loadPage(std::vector<std::string> keys) {
     m_scrollLayer->m_contentLayer->removeAllChildren();
 
     for (auto achievement : this->achievements) {
+        auto achievementIdentifier = BAL_split(achievement->identifier, '.')[2];
+        log::info("{}", achievementIdentifier);
         for (auto key : keys) {
             if (achievement->identifier.find(key) != std::string::npos) {
                 auto achievementCell = BetterAchievementCell::create(achievement);
@@ -207,10 +218,6 @@ void BetterAchievementLayer::onLoadPage(CCObject* sender) {
         case 1005:
             this->loadPage(this->shardsAndPathsKeys);
             this->m_categoryTitle->setString("Shards and Paths");
-            break;
-        case 1006:
-            this->loadPage(this->miscKeys);
-            this->m_categoryTitle->setString("Miscellaneous");
             break;
     }
 }
