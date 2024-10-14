@@ -28,6 +28,13 @@ bool BetterAchievementLayer::init() {
     bg->setID("content-background");
     this->addChild(bg);
 
+    auto listView = ListView::create(CCArray::create(), 0.f, 358.f, 220.f);
+    m_listLayer = GJListLayer::create(listView, "Main Levels", ccc4(168, 85, 44, 255), 358.f, 220.f, 0);
+    m_listLayer->setAnchorPoint({0.f, 0.f});
+    m_listLayer->setPosition({director->getScreenRight() / 5.25f + 5.f, director->getScreenTop() / 6.f - 15.f});
+    m_listLayer->setID("m_listLayer");
+    this->addChild(m_listLayer);
+
     m_scrollLayer = ScrollLayer::create(winSize / 1.5f);
     m_scrollLayer->m_contentLayer->setLayout(
         ColumnLayout::create()
@@ -41,57 +48,25 @@ bool BetterAchievementLayer::init() {
     );
     m_scrollLayer->setID("achievement-scroll-layer");
     m_scrollLayer->m_scrollLimitTop = 70.f;
-    m_scrollLayer->m_scrollLimitBottom = 30.f;
-    m_scrollLayer->setPosition({director->getScreenRight() / 2 - 158.f, director->getScreenTop() / 2 - 139.f});
+    //m_scrollLayer->m_scrollLimitBottom = 30.f;
+    m_scrollLayer->setPosition({17.5f, -10.f});
     m_scrollLayer->setContentHeight(m_scrollLayer->getContentHeight() + 70.f);
     m_scrollLayer->setZOrder(1);
     m_scrollLayer->setScale(0.9f);
-    this->addChild(m_scrollLayer);
-
-    auto scrollLayerBG = CCLayerColor::create({ 168, 85, 44, 255 });
-    scrollLayerBG->setID("scrollLayerBG");
-    scrollLayerBG->setContentSize({369.f, m_scrollLayer->getContentHeight() + 5.f});
-    scrollLayerBG->ignoreAnchorPointForPosition(false);
-    scrollLayerBG->setPosition({director->getScreenRight() / 2 + 5.f, director->getScreenTop() / 2 + 5.f});
-    scrollLayerBG->setScale(0.9f);
-    this->addChild(scrollLayerBG);
-
-    auto topBar = CCSprite::createWithSpriteFrameName("GJ_table_top_001.png");
-    topBar->setID("top-bar");
-    topBar->setPosition({scrollLayerBG->getPositionX(), scrollLayerBG->getContentSize().height - 8.f});
-    topBar->setScale(0.9f);
-    topBar->setZOrder(1);
-    this->addChild(topBar);
-
-    auto bottomBar = CCSprite::createWithSpriteFrameName("GJ_table_bottom_001.png");
-    bottomBar->setID("bottom-bar");
-    bottomBar->setPosition({scrollLayerBG->getPositionX(), scrollLayerBG->getPositionY() - 130.f});
-    bottomBar->setScale(0.9f);
-    bottomBar->setZOrder(1);
-    this->addChild(bottomBar);
-
-    auto leftBar = CCSprite::createWithSpriteFrameName("GJ_table_side_001.png");
-    leftBar->setID("left-bar");
-    leftBar->setPosition({scrollLayerBG->getPositionX() - 165.f, scrollLayerBG->getPositionY()});
-    leftBar->setScaleY(3.725f);
-    this->addChild(leftBar);
-
-    auto rightBar = CCSprite::createWithSpriteFrameName("GJ_table_side_001.png");
-    rightBar->setID("right-bar");
-    rightBar->setPosition({scrollLayerBG->getContentSize().width + 85.f, scrollLayerBG->getPositionY()});
-    rightBar->setScaleY(3.725f);
-    rightBar->setFlipX(true);
-    this->addChild(rightBar);
+    m_scrollLayer->setAnchorPoint({0.5f, 0.0f});
+    m_listLayer->addChild(m_scrollLayer);
 
     m_scrollLayer->scrollToTop();
+
+    auto topBar = m_listLayer->getChildByID("top-border");
 
     buttonMenu = CCMenu::create();
     buttonMenu->setID("button-menu");
     buttonMenu->setScaledContentSize(topBar->getScaledContentSize());
-    buttonMenu->setPosition({topBar->getPositionX(), topBar->getPositionY() + 23.f});
+    buttonMenu->setPosition({topBar->getPositionX(), topBar->getPositionY() + 25.f});
     buttonMenu->setZOrder(0);
     buttonMenu->setLayout(RowLayout::create()->setAutoScale(false)->setGap(1.f));
-    this->addChild(buttonMenu);
+    m_listLayer->addChild(buttonMenu);
 
     auto createTab = [=](TabButton* tab, std::string text, int tag) {
         tab = TabButton::create(text.c_str(), this, menu_selector(BetterAchievementLayer::onLoadPage));
@@ -120,12 +95,7 @@ bool BetterAchievementLayer::init() {
     createTab(m_secretTab, "Secret", 1004);
     createTab(m_shardsAndPathsTab, "Shards and Paths", 1005);
 
-    m_categoryTitle = CCLabelBMFont::create("Main Levels", "bigFont.fnt");
-    m_categoryTitle->setID("category-title");
-    m_categoryTitle->setScale(0.65f);
-    m_categoryTitle->setPosition({topBar->getPositionX(), topBar->getPositionY() + 3.f});
-    m_categoryTitle->setZOrder(1);
-    this->addChild(m_categoryTitle);
+    m_categoryTitle = static_cast<CCLabelBMFont*>(m_listLayer->getChildByID("title"));
 
     this->getAllAchievements();
     this->loadPage(this->mainLevelsKeys);
@@ -152,21 +122,10 @@ void BetterAchievementLayer::getAllAchievements() {
     }
 }
 
-std::vector<std::string> BAL_split(std::string s, char del) {
-    std::vector<std::string> tokens;
-    std::stringstream ss(s);
-    std::string token;
-    while(std::getline(ss, token, del)) {
-        tokens.push_back(token);
-    }
-    return tokens;
-}
-
 void BetterAchievementLayer::loadPage(std::vector<std::string> keys) {
     m_scrollLayer->m_contentLayer->removeAllChildren();
 
     for (auto achievement : this->achievements) {
-        auto achievementIdentifier = BAL_split(achievement->identifier, '.')[2];
         for (auto key : keys) {
             if (achievement->identifier.find(key) != std::string::npos) {
                 auto achievementCell = BetterAchievementCell::create(achievement);

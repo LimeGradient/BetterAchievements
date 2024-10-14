@@ -1,3 +1,7 @@
+# 1.1.1
+- Removed Window Resize Incompatibility
+- Fixed Achievement List
+
 # 1.1.0
 - Fixed achievements showing up twice or being in the wrong section
 - Fixed Trail and Death Effect achievements showing as a random icon

@@ -13,6 +13,7 @@ protected:
     CCScale9Sprite* m_bg;
     CCSprite* m_outline;
     ScrollLayer* m_scrollLayer;
+    GJListLayer* m_listLayer;
 
     std::vector<std::string> mainLevelsKeys = {"level", "tower", "coins"};
     std::vector<std::string> userLevelsKeys = {"demon", "stars", "moons", "usercoins", "diamonds", "lists", "mappacks", "gauntlets", "daily"};

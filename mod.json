@@ -29,12 +29,5 @@
 			"description": "Show the percentage completed for every achievement",
 			"default": false
 		}
-	},
-	"incompatibilities": [
-		{
-			"id": "mat.max-window",
-			"importance": "conflicting",
-			"version": ">=1.0.0"
-		}
-	]
+	}
 }
