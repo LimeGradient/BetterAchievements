@@ -48,7 +48,7 @@ bool BetterAchievementLayer::init() {
     );
     m_scrollLayer->setID("achievement-scroll-layer");
     m_scrollLayer->m_scrollLimitTop = 70.f;
-    //m_scrollLayer->m_scrollLimitBottom = 30.f;
+    m_scrollLayer->m_scrollLimitBottom = -15.f;
     m_scrollLayer->setPosition({17.5f, -10.f});
     m_scrollLayer->setContentHeight(m_scrollLayer->getContentHeight() + 70.f);
     m_scrollLayer->setZOrder(1);
