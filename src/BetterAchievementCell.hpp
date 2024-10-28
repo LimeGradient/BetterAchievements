@@ -3,6 +3,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/binding/AchievementManager.hpp>
 #include <Geode/modify/AchievementCell.hpp>
+#include <UIBuilder.hpp>
 
 #include "Achievement.hpp"
 

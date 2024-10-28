@@ -12,15 +12,19 @@ bool BetterAchievementLayer::init() {
     this->setID("BetterAchievementLayer");
 
     CCSprite* backSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_03_001.png");
-    CCMenuItemSpriteExtra* backBtn = CCMenuItemSpriteExtra::create(backSpr, this, menu_selector(BetterAchievementLayer::onClose));
-    backBtn->setID("back-button");
 
-    CCMenu* backMenu = CCMenu::create();
-    backMenu->setID("back-menu");
-    backMenu->addChild(backBtn);
-    this->addChild(backMenu, 1);
+    CCMenuItemSpriteExtra* backBtn = Build<CCMenuItemSpriteExtra>::create(backSpr, this, menu_selector(BetterAchievementLayer::onClose))
+        .id("back-button")
+        .collect();
 
-    backMenu->setPosition(ccp(director->getScreenLeft() + 25.f, director->getScreenTop() - 22.f));
+    CCMenu* backMenu = Build<CCMenu>::create()
+        .id("back-menu")
+        .pos(ccp(director->getScreenLeft() + 25.f, director->getScreenTop() - 22.f))
+        .zOrder(1)
+        .parent(this)
+        .child(backBtn)
+        .collect();
+
     this->setKeyboardEnabled(true);
     this->setKeypadEnabled(true);
 
@@ -29,44 +33,47 @@ bool BetterAchievementLayer::init() {
     this->addChild(bg);
 
     auto listView = ListView::create(CCArray::create(), 0.f, 358.f, 220.f);
-    m_listLayer = GJListLayer::create(listView, "Main Levels", ccc4(168, 85, 44, 255), 358.f, 220.f, 0);
-    m_listLayer->setAnchorPoint({0.f, 0.f});
-    m_listLayer->setPosition({director->getScreenRight() / 5.25f + 5.f, director->getScreenTop() / 6.f - 15.f});
-    m_listLayer->setID("m_listLayer");
-    this->addChild(m_listLayer);
 
-    m_scrollLayer = ScrollLayer::create(winSize / 1.5f);
-    m_scrollLayer->m_contentLayer->setLayout(
-        ColumnLayout::create()
-            ->setAxisReverse(true)
-            ->setAxisAlignment(AxisAlignment::End)
-            ->setAutoGrowAxis(this->getContentSize().height)
-            ->setGrowCrossAxis(true)
-            ->setCrossAxisOverflow(true)
-            ->setGap(37.5f)
-            
-    );
-    m_scrollLayer->setID("achievement-scroll-layer");
+    Build<GJListLayer>::create(listView, "Main Levels", ccc4(168, 85, 44, 255), 358.f, 220.f, 0)
+        .anchorPoint({0.f, 0.f})
+        .center()
+        .id("list-layer")
+        .parent(this)
+        .store(m_listLayer);
+
+    Build<ScrollLayer>::create(m_listLayer->getScaledContentSize())
+        .layout(
+            ColumnLayout::create()
+                ->setAxisReverse(true)
+                ->setAxisAlignment(AxisAlignment::End)
+                ->setAutoGrowAxis(this->getContentSize().height)
+                ->setGrowCrossAxis(true)
+                ->setCrossAxisOverflow(true)
+                ->setGap(37.5f)
+        )
+        .id("achievement-scroll-layer")
+        .center()
+        .zOrder(1)
+        .scale(0.9f)
+        .anchorPoint({0.5f, 0.0f})
+        .parent(m_listLayer)
+        .store(m_scrollLayer);
+
     m_scrollLayer->m_scrollLimitTop = 70.f;
     m_scrollLayer->m_scrollLimitBottom = -15.f;
-    m_scrollLayer->setPosition({17.5f, -10.f});
-    m_scrollLayer->setContentHeight(m_scrollLayer->getContentHeight() + 70.f);
-    m_scrollLayer->setZOrder(1);
-    m_scrollLayer->setScale(0.9f);
-    m_scrollLayer->setAnchorPoint({0.5f, 0.0f});
-    m_listLayer->addChild(m_scrollLayer);
 
     m_scrollLayer->scrollToTop();
 
     auto topBar = m_listLayer->getChildByID("top-border");
 
-    buttonMenu = CCMenu::create();
-    buttonMenu->setID("button-menu");
-    buttonMenu->setScaledContentSize(topBar->getScaledContentSize());
-    buttonMenu->setPosition({topBar->getPositionX(), topBar->getPositionY() + 25.f});
-    buttonMenu->setZOrder(0);
-    buttonMenu->setLayout(RowLayout::create()->setAutoScale(false)->setGap(1.f));
-    m_listLayer->addChild(buttonMenu);
+    Build<CCMenu>::create()
+        .id("button-menu")
+        .contentSize(topBar->getScaledContentSize())
+        .posY(topBar->getPositionY() + 25.f)
+        .zOrder(0)
+        .layout(RowLayout::create()->setAutoScale(false)->setGap(1.f))
+        .parent(m_listLayer)
+        .store(buttonMenu);
 
     auto createTab = [=](TabButton* tab, std::string text, int tag) {
         tab = TabButton::create(text.c_str(), this, menu_selector(BetterAchievementLayer::onLoadPage));

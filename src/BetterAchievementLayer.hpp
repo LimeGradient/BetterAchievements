@@ -2,6 +2,7 @@
 
 #include <Geode/Geode.hpp>
 #include <Geode/binding/AchievementManager.hpp>
+#include <UIBuilder.hpp>
 
 #include "Achievement.hpp"
 #include "BetterAchievementCell.hpp"
