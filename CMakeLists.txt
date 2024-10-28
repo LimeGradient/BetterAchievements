@@ -7,7 +7,7 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 project(BetterAchievements VERSION 1.0.0)
 
 file(GLOB_RECURSE SOURCES
-    src/*.cpp src/*.hpp
+    src/*.cpp
 )
 
 include_directories(src)
@@ -21,5 +21,8 @@ else()
 endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
+CPMAddPackage("gh:camila314/uibuilder#ba63097")
+
+target_link_libraries(${PROJECT_NAME} UIBuilder)
 
 setup_geode_mod(${PROJECT_NAME})
