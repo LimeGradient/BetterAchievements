@@ -35,32 +35,37 @@ bool BetterAchievementLayer::init() {
     auto listView = ListView::create(CCArray::create(), 0.f, 358.f, 220.f);
 
     Build<GJListLayer>::create(listView, "Main Levels", ccc4(168, 85, 44, 255), 358.f, 220.f, 0)
-        .anchorPoint({0.f, 0.f})
-        .center()
+        .anchorPoint({0.5f, 0.5f})
         .id("list-layer")
         .parent(this)
+        .ignoreAnchorPointForPos(false)
+        .center()
         .store(m_listLayer);
 
-    Build<ScrollLayer>::create(m_listLayer->getScaledContentSize())
-        .layout(
-            ColumnLayout::create()
-                ->setAxisReverse(true)
-                ->setAxisAlignment(AxisAlignment::End)
-                ->setAutoGrowAxis(this->getContentSize().height)
-                ->setGrowCrossAxis(true)
-                ->setCrossAxisOverflow(true)
-                ->setGap(37.5f)
-        )
+    Build<ScrollLayer>::create(winSize / 1.5f)
         .id("achievement-scroll-layer")
-        .center()
         .zOrder(1)
         .scale(0.9f)
-        .anchorPoint({0.5f, 0.0f})
-        .parent(m_listLayer)
+        .anchorPoint({0.5f, 0.5f})
+        .ignoreAnchorPointForPos(false)
+        .center()
+        .parent(this)
         .store(m_scrollLayer);
 
-    m_scrollLayer->m_scrollLimitTop = 70.f;
+    m_scrollLayer->m_scrollLimitTop = 35.f;
     m_scrollLayer->m_scrollLimitBottom = -15.f;
+    m_scrollLayer->setContentHeight(220.f);
+    m_scrollLayer->m_contentLayer->setLayout(
+        ColumnLayout::create()
+            ->setAxisReverse(true)
+            ->setAxisAlignment(AxisAlignment::End)
+            ->setAutoGrowAxis(this->getContentSize().height)
+            ->setGrowCrossAxis(true)
+            ->setCrossAxisOverflow(true)
+            ->setGap(37.5f)
+            
+    );
+    m_scrollLayer->setPositionY(m_scrollLayer->getPositionY() + 10.f);
 
     m_scrollLayer->scrollToTop();
 

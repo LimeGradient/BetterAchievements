@@ -36,32 +36,30 @@ bool BetterAchievementCell::init(Achievement* achievement) {
     if (m_icon->m_unlockType == UnlockType::Col1 || m_icon->m_unlockType == UnlockType::Col2) {
         Build<CCLabelBMFont>::create((m_icon->m_unlockType == UnlockType::Col1) ? "1" : "2", "bigFont.fnt")
             .scale(m_icon->getScale())
+            .pos(m_icon->getContentSize() / 2)
             .parent(m_icon)
-            .center()
             .collect();
     }
 
     if (!isUnlocked) {
         Build<CCSprite>::createSpriteName("GJ_lock_001.png")
             .scale(.825f)
+            .pos(m_icon->getContentSize() / 2)
             .parent(m_icon)
-            .center()
             .collect();
     }
 
-    Build<CCLabelBMFont>::create(achievement->title.c_str(), "bigFont.fnt")
-        .id("achievement-title")
-        .scale(.35f)
-        .parent(this)
-        .center()
-        .store(m_titleText);
+    m_titleText = CCLabelBMFont::create(achievement->title.c_str(), "bigFont.fnt");
+    m_titleText->setID("achievement-title");
+    m_titleText->setScale(0.35f);
+    m_titleText->setPosition({m_icon->getPositionX() + 145.f, m_icon->getPositionY() + 7.f});
+    this->addChild(m_titleText);
     
-    Build<CCLabelBMFont>::create((isUnlocked) ? achievement->achievedDescription.c_str() : achievement->unachievedDescription.c_str(), "bigFont.fnt")
-        .id("achievement-description")
-        .scale(.2f)
-        .parent(this)
-        .center()
-        .store(m_descText);
+    m_descText = CCLabelBMFont::create((isUnlocked) ? achievement->achievedDescription.c_str() : achievement->unachievedDescription.c_str(), "bigFont.fnt");
+    m_descText->setID("achievement-description");
+    m_descText->setScale(0.2f);
+    m_descText->setPosition({m_titleText->getPositionX(), m_titleText->getPositionY() - 13.f});
+    this->addChild(m_descText);
 
     if (Mod::get()->getSettingValue<bool>("show-achievement-percentage")) {
         int percentCompleted = std::clamp(AchievementManager::sharedState()->percentForAchievement(achievement->identifier.c_str()), 0, 100);
