@@ -8,6 +8,7 @@ bool BetterAchievementLayer::init() {
     auto director = CCDirector::sharedDirector();
     auto winSize = director->getWinSize();
     float tabScale = 0.75f;
+    this->getAllAchievements();
 
     this->setID("BetterAchievementLayer");
 
@@ -67,6 +68,10 @@ bool BetterAchievementLayer::init() {
     );
 
     m_scrollLayer->scrollToTop();
+    m_scrollLayer->setPositionX(m_scrollLayer->getPositionX() + 6.f);
+
+    m_listLayer->setPositionY(m_listLayer->getPositionY() + 5.f);
+    m_scrollLayer->setPositionY(m_scrollLayer->getPositionY() + 5.f);
 
     auto topBar = m_listLayer->getChildByID("top-border");
 
@@ -108,7 +113,14 @@ bool BetterAchievementLayer::init() {
 
     m_categoryTitle = static_cast<CCLabelBMFont*>(m_listLayer->getChildByID("title"));
 
-    this->getAllAchievements();
+    auto achievementPercent = std::to_string(static_cast<int>(this->getAllAchievementsPercent())).c_str();
+    Build<CCLabelBMFont>::create(fmt::format("Total Completed: {}%", achievementPercent).c_str(), "bigFont.fnt")
+        .id("total-percent-label")
+        .pos(director->getScreenRight() - 70.f, director->getScreenBottom() + 10.f)
+        .scale(.35f)
+        .parent(this)
+        .store(m_totalPercentTitle);
+
     this->loadPage(this->mainLevelsKeys);
     this->m_selectedTabs.front()->setVisible(true);
 
@@ -191,13 +203,26 @@ void BetterAchievementLayer::onLoadPage(CCObject* sender) {
     }
 }
 
+float BetterAchievementLayer::getAllAchievementsPercent() {
+    float achievementPercent = 0.f;
+    int totalEarned = 0;
+    for (auto achievement : this->achievements) {
+        if (AchievementManager::sharedState()->isAchievementEarned(achievement->identifier.c_str())) {
+            totalEarned++;
+        }
+    }
+    log::info("total earnmed {}", totalEarned);
+    achievementPercent = (static_cast<float>(totalEarned) / this->achievements.size()) * 100;
+    return achievementPercent;
+}
+
 void BetterAchievementLayer::onClose(CCObject*) {
     auto mainMenu = MenuLayer::scene(false);
     CCDirector::sharedDirector()->pushScene(CCTransitionFade::create(0.5f, mainMenu));
 }
 
 void BetterAchievementLayer::keyBackClicked() {
-    this->onClose(new CCObject());
+    this->onClose(nullptr);
 }
 
 BetterAchievementLayer* BetterAchievementLayer::create() {

@@ -31,6 +31,8 @@ protected:
     TabButton* m_miscTab;
 
     CCLabelBMFont* m_categoryTitle;
+    CCLabelBMFont* m_totalPercentTitle;
+    CCLabelBMFont* m_categoryPercentTitle;
 
     std::vector<CCNode*> m_unselectedTabs;
     std::vector<CCMenuItemSpriteExtra*> m_selectedTabs;
@@ -38,6 +40,8 @@ protected:
     std::vector<Achievement*> achievements;
     void getAllAchievements();
     void loadPage(std::vector<std::string> keys);
+    float getAllAchievementsPercent();
+    float getCategoryAchievementsPercent();
 
     void onClose(CCObject*);
     void onLoadPage(CCObject* sender);
