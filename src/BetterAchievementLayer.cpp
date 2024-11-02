@@ -35,7 +35,7 @@ bool BetterAchievementLayer::init() {
     auto listView = ListView::create(CCArray::create(), 0.f, 358.f, 220.f);
 
     Build<GJListLayer>::create(listView, "Main Levels", ccc4(168, 85, 44, 255), 358.f, 220.f, 0)
-        .anchorPoint({0.5f, 0.5f})
+        .anchorPoint({0.5f, 0.55f})
         .id("list-layer")
         .parent(this)
         .ignoreAnchorPointForPos(false)
@@ -46,7 +46,7 @@ bool BetterAchievementLayer::init() {
         .id("achievement-scroll-layer")
         .zOrder(1)
         .scale(0.9f)
-        .anchorPoint({0.5f, 0.5f})
+        .anchorPoint({0.45f, 0.55f})
         .ignoreAnchorPointForPos(false)
         .center()
         .parent(this)
@@ -54,7 +54,7 @@ bool BetterAchievementLayer::init() {
 
     m_scrollLayer->m_scrollLimitTop = 35.f;
     m_scrollLayer->m_scrollLimitBottom = -15.f;
-    m_scrollLayer->setContentHeight(220.f);
+    m_scrollLayer->setContentHeight(240.f);
     m_scrollLayer->m_contentLayer->setLayout(
         ColumnLayout::create()
             ->setAxisReverse(true)
@@ -65,7 +65,6 @@ bool BetterAchievementLayer::init() {
             ->setGap(37.5f)
             
     );
-    m_scrollLayer->setPositionY(m_scrollLayer->getPositionY() + 10.f);
 
     m_scrollLayer->scrollToTop();
 
@@ -74,7 +73,7 @@ bool BetterAchievementLayer::init() {
     Build<CCMenu>::create()
         .id("button-menu")
         .contentSize(topBar->getScaledContentSize())
-        .posY(topBar->getPositionY() + 25.f)
+        .pos({topBar->getPositionX(), topBar->getPositionY() + 25.f})
         .zOrder(0)
         .layout(RowLayout::create()->setAutoScale(false)->setGap(1.f))
         .parent(m_listLayer)
