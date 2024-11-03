@@ -1,3 +1,7 @@
+# 1.2.1
+- Fixed cells going outside of list
+- Fixed category percentage behaving weirdly
+
 # 1.2.0
 - Added Achievement Progress Button
 - Added option to hide completed achievements

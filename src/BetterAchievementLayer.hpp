@@ -38,6 +38,7 @@ protected:
     std::vector<CCMenuItemSpriteExtra*> m_selectedTabs;
 
     std::vector<Achievement*> achievements;
+    std::vector<Achievement*> categoryAchievements;
     void getAllAchievements();
     void loadPage(std::vector<std::string> keys);
     float getAllAchievementsPercent();

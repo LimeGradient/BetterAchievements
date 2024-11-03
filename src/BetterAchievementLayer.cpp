@@ -155,17 +155,19 @@ void BetterAchievementLayer::getAllAchievements() {
 
 void BetterAchievementLayer::loadPage(std::vector<std::string> keys) {
     m_scrollLayer->m_contentLayer->removeAllChildren();
+    this->categoryAchievements.clear();
 
     for (auto achievement : this->achievements) {
         for (auto key : keys) {
             if (achievement->identifier.find(key) != std::string::npos) {
+                this->categoryAchievements.push_back(achievement);
                 auto hideCompleted = Mod::get()->getSettingValue<bool>("hide-completed-achievements");
                 if (AchievementManager::sharedState()->isAchievementEarned(achievement->identifier.c_str()) && hideCompleted) {
                     continue;
                 }
 
                 auto achievementCell = BetterAchievementCell::create(achievement);
-                achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth() + 25.f);
+                achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth() + 15.f);
 
                 m_scrollLayer->m_contentLayer->addChild(achievementCell);
                 m_scrollLayer->m_contentLayer->updateLayout();
@@ -231,14 +233,12 @@ float BetterAchievementLayer::getAllAchievementsPercent() {
 float BetterAchievementLayer::getCategoryAchievementsPercent() {
     float achievementPercent = 0.f;
     int totalEarned = 0;
-    auto array = CCArrayExt<BetterAchievementCell*>(m_scrollLayer->m_contentLayer->getChildren());
-    for (auto cell : array) {
-        auto identifier = cell->getID();
-        if (AchievementManager::sharedState()->isAchievementEarned(identifier.c_str())) {
+    for (auto achievement : this->categoryAchievements) {
+        if (AchievementManager::sharedState()->isAchievementEarned(achievement->identifier.c_str())) {
             totalEarned++;
         }
     }
-    achievementPercent = (static_cast<float>(totalEarned) / array.size()) * 100;
+    achievementPercent = (static_cast<float>(totalEarned) / this->categoryAchievements.size()) * 100;
     return achievementPercent;
 }
 
