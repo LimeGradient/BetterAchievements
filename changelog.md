@@ -1,3 +1,8 @@
+# 1.2.0
+- Added Achievement Progress Button
+- Changed color of locked achievement cells
+- Fixed positioning of items
+
 # 1.1.1
 - Removed Window Resize Incompatibility
 - Fixed Achievement List

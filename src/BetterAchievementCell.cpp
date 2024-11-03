@@ -14,6 +14,10 @@ bool BetterAchievementCell::init(Achievement* achievement) {
         .color(ccWHITE)
         .parent(this)
         .store(m_bg);
+    
+    if (!isUnlocked) {
+        m_bg->setColor(ccBLACK);
+    }
 
     auto unlockType = this->iconToUnlockType(achievement->icon);
     auto iconIndex = this->iconToIconIndex(achievement->icon);

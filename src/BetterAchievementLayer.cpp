@@ -68,10 +68,7 @@ bool BetterAchievementLayer::init() {
     );
 
     m_scrollLayer->scrollToTop();
-    m_scrollLayer->setPositionX(m_scrollLayer->getPositionX() + 6.f);
-
-    m_listLayer->setPositionY(m_listLayer->getPositionY() + 5.f);
-    m_scrollLayer->setPositionY(m_scrollLayer->getPositionY() + 5.f);
+    m_scrollLayer->setPositionX(m_scrollLayer->getPositionX() - 4.f);
 
     auto topBar = m_listLayer->getChildByID("top-border");
 
@@ -113,16 +110,27 @@ bool BetterAchievementLayer::init() {
 
     m_categoryTitle = static_cast<CCLabelBMFont*>(m_listLayer->getChildByID("title"));
 
-    auto achievementPercent = std::to_string(static_cast<int>(this->getAllAchievementsPercent())).c_str();
-    Build<CCLabelBMFont>::create(fmt::format("Total Completed: {}%", achievementPercent).c_str(), "bigFont.fnt")
-        .id("total-percent-label")
-        .pos(director->getScreenRight() - 70.f, director->getScreenBottom() + 10.f)
-        .scale(.35f)
-        .parent(this)
-        .store(m_totalPercentTitle);
-
     this->loadPage(this->mainLevelsKeys);
     this->m_selectedTabs.front()->setVisible(true);
+
+    Build<CCSprite>::createSpriteName("percent-button.png"_spr)
+        .id("percent-button")
+        .scale(.75f)
+        .intoMenuItem([this]() {
+            FLAlertLayer::create(
+                "Achievement Progress",
+                fmt::format("<cg>Total</c> achievements: {}%\n<cg>{}</c> achievements: {}%", 
+                    (int)this->getAllAchievementsPercent(),
+                    m_categoryTitle->getString(),
+                    (int)this->getCategoryAchievementsPercent()
+                ),
+                "Ok"
+            )->show();
+        })
+        .pos({director->getScreenLeft() + 20.f, director->getScreenBottom() + 20.f})
+        .intoNewParent(CCMenu::create())
+        .pos(0.f, 0.f)
+        .parent(this);
 
     buttonMenu->updateLayout();
 
@@ -152,7 +160,7 @@ void BetterAchievementLayer::loadPage(std::vector<std::string> keys) {
         for (auto key : keys) {
             if (achievement->identifier.find(key) != std::string::npos) {
                 auto achievementCell = BetterAchievementCell::create(achievement);
-                achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth());
+                achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth() + 25.f);
 
                 m_scrollLayer->m_contentLayer->addChild(achievementCell);
                 m_scrollLayer->m_contentLayer->updateLayout();
@@ -211,8 +219,21 @@ float BetterAchievementLayer::getAllAchievementsPercent() {
             totalEarned++;
         }
     }
-    log::info("total earnmed {}", totalEarned);
     achievementPercent = (static_cast<float>(totalEarned) / this->achievements.size()) * 100;
+    return achievementPercent;
+}
+
+float BetterAchievementLayer::getCategoryAchievementsPercent() {
+    float achievementPercent = 0.f;
+    int totalEarned = 0;
+    auto array = CCArrayExt<BetterAchievementCell*>(m_scrollLayer->m_contentLayer->getChildren());
+    for (auto cell : array) {
+        auto identifier = cell->getID();
+        if (AchievementManager::sharedState()->isAchievementEarned(identifier.c_str())) {
+            totalEarned++;
+        }
+    }
+    achievementPercent = (static_cast<float>(totalEarned) / array.size()) * 100;
     return achievementPercent;
 }
 
