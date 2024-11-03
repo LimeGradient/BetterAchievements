@@ -28,6 +28,12 @@
 			"name": "Show Achievement Percentage",
 			"description": "Show the percentage completed for every achievement",
 			"default": false
+		},
+		"hide-completed-achievements": {
+			"type": "bool",
+			"name": "Hide Completed Achievements",
+			"description": "Hide completed achievements from showing",
+			"default": false
 		}
 	}
 }

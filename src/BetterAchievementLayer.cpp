@@ -159,6 +159,11 @@ void BetterAchievementLayer::loadPage(std::vector<std::string> keys) {
     for (auto achievement : this->achievements) {
         for (auto key : keys) {
             if (achievement->identifier.find(key) != std::string::npos) {
+                auto hideCompleted = Mod::get()->getSettingValue<bool>("hide-completed-achievements");
+                if (AchievementManager::sharedState()->isAchievementEarned(achievement->identifier.c_str()) && hideCompleted) {
+                    continue;
+                }
+
                 auto achievementCell = BetterAchievementCell::create(achievement);
                 achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth() + 25.f);
 

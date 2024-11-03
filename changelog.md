@@ -1,5 +1,6 @@
 # 1.2.0
 - Added Achievement Progress Button
+- Added option to hide completed achievements
 - Changed color of locked achievement cells
 - Fixed positioning of items
 
