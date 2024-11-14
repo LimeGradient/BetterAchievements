@@ -21,7 +21,7 @@ else()
 endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
-CPMAddPackage("gh:camila314/uibuilder#ba63097")
+CPMAddPackage("gh:LimeGradient/skibidibuilder#276d128")
 
 target_link_libraries(${PROJECT_NAME} UIBuilder)
 
