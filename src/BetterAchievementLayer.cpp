@@ -12,6 +12,8 @@ bool BetterAchievementLayer::init() {
 
     this->setID("BetterAchievementLayer");
 
+    AchievementNotifier::sharedState()->notifyAchievement(this->achievements[0]->title.c_str(), this->achievements[0]->achievedDescription.c_str(), this->achievements[0]->icon.c_str(), false);
+
     CCSprite* backSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_03_001.png");
 
     CCMenuItemSpriteExtra* backBtn = Build<CCMenuItemSpriteExtra>::create(backSpr, this, menu_selector(BetterAchievementLayer::onClose))

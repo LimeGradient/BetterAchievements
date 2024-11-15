@@ -1,10 +1,10 @@
 {
 	"geode": "3.9.0",
 	"gd": {
-		"win": "2.206",
-		"android": "2.206",
-		"mac": "2.206",
-		"ios": "2.206"
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
 	},
 	"id": "limegradient.betterachievements",
 	"name": "BetterAchievements",
@@ -20,9 +20,40 @@
 			"AchievementMenuSheet": [
 				"resources/*.png"
 			]
-		}
+		},
+		"files": [
+			"resources/sfx/*.mp3"
+		]
 	},
 	"settings": {
+		"custom-achievement-title": {
+			"type": "title",
+			"name": "Achievement Type",
+			"description": "Change the type of Achievement Notifier"
+		},
+		"achievement-notifier-type": {
+			"type": "string",
+			"name": "Achievement Notifier",
+			"description": "Change the type of Achievement Notifier to one of the given options",
+			"default": "Geometry Dash",
+			"one-of": ["Geometry Dash", "Xbox 360", "Xbox One", "Playstation 3", "Playstation 4", "Playstation 5"]
+		},
+		"xbox-achievement-color": {
+			"type": "rgb",
+			"name": "Xbox Achievement Color",
+			"description": "Change the color for the Xbox notification",
+			"default": "#780acc"
+		},
+		"xbox-use-rare": {
+			"type": "bool",
+			"name": "Rare Xbox Achievement",
+			"description": "Use the rare achievement sound and animation from the Xbox One",
+			"default": true
+		},
+		"miscellaneous-settings-title": {
+			"type": "title",
+			"name": "Miscellaneous Settings"
+		},
 		"show-achievement-percentage": {
 			"type": "bool",
 			"name": "Show Achievement Percentage",

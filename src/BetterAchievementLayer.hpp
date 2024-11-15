@@ -54,5 +54,5 @@ protected:
 public:
     static BetterAchievementLayer* create();
     static CCScene* scene();
-    bool init();
+    bool init() override;
 };
