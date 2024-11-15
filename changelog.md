@@ -1,3 +1,7 @@
+# 1.2.2
+- Ported to GD 2.2074
+- Fixed tags
+
 # 1.2.1
 - Fixed cells going outside of list
 - Fixed category percentage behaving weirdly
