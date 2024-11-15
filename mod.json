@@ -38,5 +38,12 @@
 	},
 	"tags": [
 		"offline", "enhancement", "interface", "customization"
+	],
+	"dependencies": [
+		{
+			"id": "geode.node-ids",
+			"version": ">=1.16.0",
+			"importance": "required"
+		}
 	]
 }
