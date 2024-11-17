@@ -1,5 +1,5 @@
 {
-	"geode": "4.0.0-alpha.1",
+	"geode": "4.0.0-beta.1",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -38,5 +38,12 @@
 	},
 	"tags": [
 		"offline", "enhancement", "interface", "customization"
+	],
+	"dependencies": [
+		{
+			"id": "geode.node-ids",
+			"version": ">=1.16.0",
+			"importance": "required"
+		}
 	]
 }
