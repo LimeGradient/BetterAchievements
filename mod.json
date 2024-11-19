@@ -1,5 +1,5 @@
 {
-	"geode": "4.0.0-beta.1",
+	"geode": "4.0.0",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -8,7 +8,7 @@
 	},
 	"id": "limegradient.betterachievements",
 	"name": "BetterAchievements",
-	"version": "v1.2.2-beta.1",
+	"version": "v1.2.3",
 	"developer": "LimeGradient",
 	"description": "A Better Achievement Menu!",
 	"links": {
