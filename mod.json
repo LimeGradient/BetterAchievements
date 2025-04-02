@@ -1,5 +1,5 @@
 {
-	"geode": "4.0.0-alpha.1",
+	"geode": "4.3.0",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -8,57 +8,25 @@
 	},
 	"id": "limegradient.betterachievements",
 	"name": "BetterAchievements",
-	"version": "v1.2.2",
+	"version": "v1.3.0",
 	"developer": "LimeGradient",
 	"description": "A Better Achievement Menu!",
 	"links": {
-		"source": "https://github.com/LimeGradient/BetterAchievements",
-		"community": "https://discord.gg/FtVqAhcWQN"
+		"source": "https://github.com/LimeGradient/BetterAchievements"
 	},
 	"resources": {
 		"spritesheets": {
 			"AchievementMenuSheet": [
 				"resources/*.png"
 			]
-		},
-		"files": [
-			"resources/sfx/*.mp3"
-		]
+		}
 	},
 	"settings": {
-		"custom-achievement-title": {
-			"type": "title",
-			"name": "Achievement Type",
-			"description": "Change the type of Achievement Notifier"
-		},
-		"achievement-notifier-type": {
-			"type": "string",
-			"name": "Achievement Notifier",
-			"description": "Change the type of Achievement Notifier to one of the given options",
-			"default": "Geometry Dash",
-			"one-of": ["Geometry Dash", "Xbox 360", "Xbox One", "Playstation 3", "Playstation 4", "Playstation 5"]
-		},
-		"xbox-achievement-color": {
-			"type": "rgb",
-			"name": "Xbox Achievement Color",
-			"description": "Change the color for the Xbox notification",
-			"default": "#780acc"
-		},
-		"xbox-use-rare": {
-			"type": "bool",
-			"name": "Rare Xbox Achievement",
-			"description": "Use the rare achievement sound and animation from the Xbox One",
-			"default": true
-		},
-		"miscellaneous-settings-title": {
-			"type": "title",
-			"name": "Miscellaneous Settings"
-		},
 		"show-achievement-percentage": {
 			"type": "bool",
 			"name": "Show Achievement Percentage",
 			"description": "Show the percentage completed for every achievement",
-			"default": false
+			"default": true
 		},
 		"hide-completed-achievements": {
 			"type": "bool",
@@ -70,11 +38,10 @@
 	"tags": [
 		"offline", "enhancement", "interface", "customization"
 	],
-	"dependencies": [
-		{
-			"id": "geode.node-ids",
+	"dependencies": {
+		"geode.node-ids": {
 			"version": ">=1.16.0",
 			"importance": "required"
 		}
-	]
+	}
 }

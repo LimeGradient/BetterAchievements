@@ -9,8 +9,6 @@ bool BetterAchievementCell::init(Achievement* achievement) {
         .opacity(25)
         .ignoreAnchorPointForPos(false)
         .anchorPoint({0.f, 0.f})
-        .scale(.85f)
-        .scaleX(.95f)
         .color(ccWHITE)
         .parent(this)
         .store(m_bg);
@@ -33,7 +31,7 @@ bool BetterAchievementCell::init(Achievement* achievement) {
     Build<GJItemIcon>::create(unlockType, iconIndex, ccc3(175, 175, 175),ccc3(255, 255, 255), false, false, true, ccc3(255, 255, 255))
         .id("achievement-icon")
         .scale(0.625f)
-        .pos({17.5f, 17.5f})
+        .pos({17.5f, 20.f})
         .parent(this)
         .store(m_icon);
 
@@ -56,7 +54,7 @@ bool BetterAchievementCell::init(Achievement* achievement) {
     m_titleText = CCLabelBMFont::create(achievement->title.c_str(), "bigFont.fnt");
     m_titleText->setID("achievement-title");
     m_titleText->setScale(0.35f);
-    m_titleText->setPosition({m_icon->getPositionX() + 145.f, m_icon->getPositionY() + 7.f});
+    m_titleText->setPosition({m_icon->getPositionX() + 165.f, m_icon->getPositionY() + 6.f});
     this->addChild(m_titleText);
     
     m_descText = CCLabelBMFont::create((isUnlocked) ? achievement->achievedDescription.c_str() : achievement->unachievedDescription.c_str(), "bigFont.fnt");
@@ -69,7 +67,7 @@ bool BetterAchievementCell::init(Achievement* achievement) {
         int percentCompleted = std::clamp(AchievementManager::sharedState()->percentForAchievement(achievement->identifier.c_str()), 0, 100);
         auto percentageLabel = CCLabelBMFont::create(fmt::format("{}%", percentCompleted).c_str(), "bigFont.fnt");
         percentageLabel->setScale(0.35f);
-        percentageLabel->setPosition({300.f, 18.f});
+        percentageLabel->setPosition({350.f, 20.f});
         this->addChild(percentageLabel);
     }
 

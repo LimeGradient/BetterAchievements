@@ -12,8 +12,6 @@ bool BetterAchievementLayer::init() {
 
     this->setID("BetterAchievementLayer");
 
-    AchievementNotifier::sharedState()->notifyAchievement(this->achievements[0]->title.c_str(), this->achievements[0]->achievedDescription.c_str(), this->achievements[0]->icon.c_str(), false);
-
     CCSprite* backSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_03_001.png");
 
     CCMenuItemSpriteExtra* backBtn = Build<CCMenuItemSpriteExtra>::create(backSpr, this, menu_selector(BetterAchievementLayer::onClose))
@@ -49,28 +47,27 @@ bool BetterAchievementLayer::init() {
         .id("achievement-scroll-layer")
         .zOrder(1)
         .scale(0.9f)
-        .anchorPoint({0.45f, 0.55f})
+        .anchorPoint({0.5f, 0.5f})
         .ignoreAnchorPointForPos(false)
+        .parent(m_listLayer)
         .center()
-        .parent(this)
         .store(m_scrollLayer);
 
-    m_scrollLayer->m_scrollLimitTop = 35.f;
-    m_scrollLayer->m_scrollLimitBottom = -15.f;
-    m_scrollLayer->setContentHeight(240.f);
+    m_scrollLayer->setContentHeight(this->getScaledContentHeight() - 20.f);
     m_scrollLayer->m_contentLayer->setLayout(
         ColumnLayout::create()
             ->setAxisReverse(true)
-            ->setAxisAlignment(AxisAlignment::End)
-            ->setAutoGrowAxis(this->getContentSize().height)
-            ->setGrowCrossAxis(true)
+            ->setAxisAlignment(AxisAlignment::Even)
+            ->setAutoGrowAxis(this->getScaledContentHeight())
+            ->setGrowCrossAxis(false)
             ->setCrossAxisOverflow(true)
-            ->setGap(37.5f)
+            ->setGap(45.f)
             
     );
-
-    m_scrollLayer->scrollToTop();
-    m_scrollLayer->setPositionX(m_scrollLayer->getPositionX() - 4.f);
+    m_scrollLayer->m_scrollLimitTop = 60.f;
+    m_scrollLayer->m_scrollLimitBottom = 15.f;
+    m_scrollLayer->moveToTop();
+    m_scrollLayer->setPositionX(m_scrollLayer->getPositionX() + 2.f);
 
     auto topBar = m_listLayer->getChildByID("top-border");
 
@@ -83,7 +80,7 @@ bool BetterAchievementLayer::init() {
         .parent(m_listLayer)
         .store(buttonMenu);
 
-    auto createTab = [=](TabButton* tab, std::string text, int tag) {
+    auto createTab = [=, this](TabButton* tab, std::string text, int tag) {
         tab = TabButton::create(text.c_str(), this, menu_selector(BetterAchievementLayer::onLoadPage));
         tab->setScale(tabScale);
         tab->setTag(tag);
@@ -169,7 +166,7 @@ void BetterAchievementLayer::loadPage(std::vector<std::string> keys) {
                 }
 
                 auto achievementCell = BetterAchievementCell::create(achievement);
-                achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth() + 15.f);
+                achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth() + 35.f);
 
                 m_scrollLayer->m_contentLayer->addChild(achievementCell);
                 m_scrollLayer->m_contentLayer->updateLayout();
