@@ -1,6 +1,5 @@
 #include "BetterAchievementCell.hpp"
 #include "Achievement.hpp"
-#include "Geode/binding_intel/CCMenuItemSpriteExtra.hpp"
 
 bool BetterAchievementCell::init(Achievement* achievement) {
     bool isUnlocked = AchievementManager::sharedState()->isAchievementEarned(achievement->identifier.c_str());

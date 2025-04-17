@@ -6,7 +6,6 @@
 #include <UIBuilder.hpp>
 
 #include "Achievement.hpp"
-#include "Geode/binding_intel/CCMenuItemSpriteExtra.hpp"
 
 using namespace geode::prelude;
 
