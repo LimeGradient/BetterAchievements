@@ -110,6 +110,7 @@ bool BetterAchievementLayer::init() {
     m_categoryTitle = static_cast<CCLabelBMFont*>(m_listLayer->getChildByID("title"));
 
     this->loadPage(this->mainLevelsKeys);
+    this->m_unselectedTabs.front()->setVisible(false);
     this->m_selectedTabs.front()->setVisible(true);
 
     Build<CCSprite>::createSpriteName("percent-button.png"_spr)
