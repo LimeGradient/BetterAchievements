@@ -1,3 +1,6 @@
+# 1.2.3
+- Fixed UI Bugs
+
 # 1.2.2
 - Ported to GD 2.2074
 - Fixed tags

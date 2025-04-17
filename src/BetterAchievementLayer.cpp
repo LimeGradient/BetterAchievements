@@ -156,12 +156,14 @@ void BetterAchievementLayer::loadPage(std::vector<std::string> keys) {
     m_scrollLayer->m_contentLayer->removeAllChildren();
     this->categoryAchievements.clear();
 
+    auto hideCompleted = Mod::get()->getSettingValue<bool>("hide-completed-achievements");
+
     for (auto achievement : this->achievements) {
+        bool isEarned = AchievementManager::sharedState()->isAchievementEarned(achievement->identifier.c_str());
         for (auto key : keys) {
             if (achievement->identifier.find(key) != std::string::npos) {
                 this->categoryAchievements.push_back(achievement);
-                auto hideCompleted = Mod::get()->getSettingValue<bool>("hide-completed-achievements");
-                if (AchievementManager::sharedState()->isAchievementEarned(achievement->identifier.c_str()) && hideCompleted) {
+                if (isEarned && hideCompleted) {
                     continue;
                 }
 
@@ -169,12 +171,13 @@ void BetterAchievementLayer::loadPage(std::vector<std::string> keys) {
                 achievementCell->m_bg->setContentWidth(m_scrollLayer->getScaledContentWidth() + 35.f);
 
                 m_scrollLayer->m_contentLayer->addChild(achievementCell);
-                m_scrollLayer->m_contentLayer->updateLayout();
             }
         }
     }
 
+    m_scrollLayer->m_contentLayer->updateLayout();
     this->m_scrollLayer->scrollToTop();
+    this->m_scrollLayer->m_contentLayer->setPositionY(this->m_scrollLayer->m_contentLayer->getPositionY() - 60.f);
 }
 
 void BetterAchievementLayer::onLoadPage(CCObject* sender) {

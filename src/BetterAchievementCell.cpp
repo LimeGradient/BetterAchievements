@@ -1,4 +1,6 @@
 #include "BetterAchievementCell.hpp"
+#include "Achievement.hpp"
+#include "Geode/binding_intel/CCMenuItemSpriteExtra.hpp"
 
 bool BetterAchievementCell::init(Achievement* achievement) {
     bool isUnlocked = AchievementManager::sharedState()->isAchievementEarned(achievement->identifier.c_str());
@@ -63,15 +65,44 @@ bool BetterAchievementCell::init(Achievement* achievement) {
     m_descText->setPosition({m_titleText->getPositionX(), m_titleText->getPositionY() - 13.f});
     this->addChild(m_descText);
 
+    auto rightMenu = Build<CCMenu>::create()
+        .pos({340.f, 20.f})
+        .width(this->m_bg->getScaledContentWidth())
+        .height(this->m_bg->getScaledContentHeight())
+        .layout(RowLayout::create()->setGap(2.5f)->setAxisAlignment(AxisAlignment::End)->setAxisReverse(true)->setAutoScale(false))
+        .parent(this)
+        .collect();
+/* 
+    auto pinSpr = CCSprite::createWithSpriteFrameName("button-pin-level.png"_spr);
+    pinSpr->setScale(0.35f);
+    m_pinBtn = CCMenuItemSpriteExtra::create(
+        pinSpr,
+        this,
+        menu_selector(BetterAchievementCell::onPinAchievement)
+    );
+    m_pinBtn->setUserObject(CCString::create(achievement->identifier));
+    rightMenu->addChild(m_pinBtn); */
+
     if (Mod::get()->getSettingValue<bool>("show-achievement-percentage")) {
         int percentCompleted = std::clamp(AchievementManager::sharedState()->percentForAchievement(achievement->identifier.c_str()), 0, 100);
         auto percentageLabel = CCLabelBMFont::create(fmt::format("{}%", percentCompleted).c_str(), "bigFont.fnt");
         percentageLabel->setScale(0.35f);
-        percentageLabel->setPosition({350.f, 20.f});
-        this->addChild(percentageLabel);
+        rightMenu->addChild(percentageLabel);
     }
 
+    rightMenu->updateLayout();
+
     return true;
+}
+
+void BetterAchievementCell::onPinAchievement(CCObject* btn) {
+    m_isPinned = !m_isPinned;
+
+    auto pinSpr = CCSprite::createWithSpriteFrameName("button-pin-level.png"_spr);
+    pinSpr->setScale(0.35f);
+
+    auto unpinSpr = CCSprite::createWithSpriteFrameName("GJ_closeBtn_001.png");
+    unpinSpr->setScale(0.35f);
 }
 
 std::vector<std::string> split(std::string s, char del) {

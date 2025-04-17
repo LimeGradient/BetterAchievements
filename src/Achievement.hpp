@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 class Achievement {
 public:
@@ -21,4 +22,14 @@ public:
     std::string icon;
     std::string limits;
     std::string order;
+};
+
+class BetterAchievementManager {
+public:
+    static BetterAchievementManager* get() {
+        static BetterAchievementManager instance;
+        return &instance;
+    }
+
+    std::vector<Achievement*> pinnedAchievements;
 };

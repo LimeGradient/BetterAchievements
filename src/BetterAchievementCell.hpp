@@ -6,6 +6,7 @@
 #include <UIBuilder.hpp>
 
 #include "Achievement.hpp"
+#include "Geode/binding_intel/CCMenuItemSpriteExtra.hpp"
 
 using namespace geode::prelude;
 
@@ -15,6 +16,8 @@ protected:
     UnlockType iconToUnlockType(std::string icon);
     int iconToIconIndex(std::string icon);
 
+    void onPinAchievement(CCObject*);
+
 public:
     static BetterAchievementCell* create(Achievement* achievement);
 
@@ -22,4 +25,6 @@ public:
     GJItemIcon* m_icon;
     CCLabelBMFont* m_titleText;
     CCLabelBMFont* m_descText;
+    CCMenuItemSpriteExtra* m_pinBtn;
+    bool m_isPinned = false;
 };
